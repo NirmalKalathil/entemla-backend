@@ -256,5 +256,5 @@ export class ComplaintsService {
   );
 
   return updatedComplaint;
-}
+  }
 }
