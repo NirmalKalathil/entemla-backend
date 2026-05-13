@@ -225,7 +225,6 @@ export class ComplaintsService {
                         complaint.createdAt
                     ).getTime();
 
-<<<<<<< HEAD
                 const diffDays =
                     diffTime /
                     (1000 * 60 * 60 * 24);
@@ -261,27 +260,21 @@ export class ComplaintsService {
     // =========================================
 
     async updateStatus(
-        id: string,
-        status: string,
-    ): Promise<Complaint | null> {
-        return this.complaintModel.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true },
-        );
-    }
-=======
-      {
-        new: true,
-      },
+    id: string,
+    status: string,
+  ): Promise<Complaint | null> {
+    return this.complaintModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true },
     );
   }
+
   // =========================================
   // DELETE COMPLAINT
   // =========================================
 
   async remove(id: string) {
     return this.complaintModel.findByIdAndDelete(id);
-  }
->>>>>>> 14a10f51304013d320cbf2403ca8f586f5dce59f
+}
 }
