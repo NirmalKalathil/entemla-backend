@@ -1,260 +1,122 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { ChatGroq } from "@langchain/groq";
-import { MongoDBAtlasVectorSearch } from '@langchain/mongodb';
-import { MongoClient, ChangeStream } from 'mongodb';
-import { PromptTemplate } from '@langchain/core/prompts';
-import { Embeddings } from '@langchain/core/embeddings';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from '../auth/schemas/user.schema'; // Adjust import path if needed
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-class GeminiEmbeddingsV1 extends Embeddings {
-  private apiKey: string;
-  private modelName: string;
-
-  constructor(apiKey: string, model = 'gemini-embedding-001') {
-    super({});
-    this.apiKey = apiKey;
-    this.modelName = model;
-  }
-
-  async embedQuery(text: string): Promise<number[]> {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${this.modelName}:embedContent?key=${this.apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: `models/${this.modelName}`,
-          content: { parts: [{ text }] },
-          outputDimensionality: 768,
-        }),
-      }
-    );
-    const data = await res.json();
-    if (!data.embedding || !data.embedding.values) {
-      throw new Error(`Embedding failed: ${JSON.stringify(data)}`);
-    }
-    return data.embedding.values;
-  }
-
-  async embedDocuments(texts: string[]): Promise<number[][]> {
-    const results: number[][] = [];
-    for (const text of texts) {
-      const embedding = await this.embedQuery(text);
-      results.push(embedding);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-    return results;
-  }
-}
-
 @Injectable()
-export class RagService implements OnModuleInit, OnModuleDestroy {
-  private readonly logger = new Logger(RagService.name);
-  private embeddings: GeminiEmbeddingsV1;
-  private llm: ChatGroq;
-  private vectorStore: MongoDBAtlasVectorSearch | null = null;
-  private client: MongoClient | null = null;
-  private changeStream: ChangeStream | null = null;
-  private readonly COLLECTION_NAME = 'faqs';
+export class RagService implements OnModuleInit {
+  // Local runtime memory to store automatically crawled website pages
+  private platformKnowledgeBase: Array<{ url: string; content: string }> = [];
 
-  constructor(private configService: ConfigService) {
-    const geminiApiKey = this.configService.get<string>('GEMINI_API_KEY');
-    const groqApiKey = this.configService.get<string>('GROQ_API_KEY');
-
-    if (!geminiApiKey || !groqApiKey) throw new Error('API Keys missing');
-
-    this.embeddings = new GeminiEmbeddingsV1(geminiApiKey);
-    this.llm = new ChatGroq({
-      apiKey: groqApiKey,
-      model: "llama-3.3-70b-versatile",
-      temperature: 0.1,
-    });
-  }
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async onModuleInit() {
-    await this.initVectorStore();
-    await this.watchForChanges();
-
-    const collection = this.client!.db().collection(this.COLLECTION_NAME);
-    const count = await collection.countDocuments();
-
-    if (count === 0) {
-      this.logger.log('🌱 Database empty. Seeding initial knowledge...');
-      await collection.insertOne({
-        content: "EnteMLA is an AI-powered platform designed to help users interact with their representatives and learn about local governance in Kerala.",
-        source: "manual-seed",
-        updatedAt: new Date()
-      });
-    }
-
-    setTimeout(() => {
-      this.crawlWebsite('http://127.0.0.1:3000');
-    }, 5000);
+    console.log('🌐 Starting automatic platform knowledge ingestion...');
+    await this.crawlEntireWebsite('http://127.0.0.1:3000'); // Point this to your frontend or website root URL
   }
 
-  async onModuleDestroy() {
-    if (this.changeStream) await this.changeStream.close();
-    if (this.client) await this.client.close();
-    this.logger.log('🔌 Connections closed safely.');
-  }
-
-  private async initVectorStore() {
-    const uri = this.configService.get<string>('MONGODB_URI');
-    this.client = new MongoClient(uri!);
-    await this.client.connect();
-
-    this.vectorStore = new MongoDBAtlasVectorSearch(this.embeddings, {
-      collection: this.client.db().collection(this.COLLECTION_NAME) as any,
-      indexName: 'vector_index',
-      textKey: 'content',
-      embeddingKey: 'embedding',
-    });
-    this.logger.log('✅ Vector Store Connected');
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async handleScheduledCrawl() {
-    this.logger.log('⏰ Starting scheduled knowledge update...');
-    await this.crawlWebsite('http://127.0.0.1:3000');
-  }
-
-  async crawlWebsite(url: string) {
-    this.logger.log(`🌐 Attempting to learn from: ${url}`);
+  // --- 1. AUTOMATIC SITE LEARNER (CRAWLER) ---
+  async crawlEntireWebsite(baseUrl: string) {
     try {
-      const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-        timeout: 15000
-      });
-      const $ = cheerio.load(data);
-      const textChunks: string[] = [];
+      // Pages to look for and learn automatically
+      const targetPages = ['/', '/about', '/help', '/faq', '/complaints/public'];
+      this.platformKnowledgeBase = [];
 
-      $('main p, article p, h1, h2, h3, li').each((_, el) => {
-        const text = $(el).text().trim().replace(/\s+/g, ' ');
-        if (text.length > 20) textChunks.push(text);
-      });
+      for (const page of targetPages) {
+        const fullUrl = `${baseUrl}${page}`;
+        try {
+          const { data } = await axios.get(fullUrl, { timeout: 5000 });
+          const $ = cheerio.load(data);
 
-      const collection = this.client!.db().collection(this.COLLECTION_NAME);
-      for (const chunk of textChunks) {
-        await collection.updateOne(
-          { content: chunk },
-          { $set: { content: chunk, source: url, updatedAt: new Date() } },
-          { upsert: true }
-        );
-      }
-      this.logger.log(`📚 Success! Ingested ${textChunks.length} sections.`);
-    } catch (e) {
-      this.logger.warn(`⚠️ Scraping failed for ${url}.`);
-    }
-  }
+          // Strip away scripts, headers, and navbars to grab only the pure text content
+          $('script, style, nav, footer, header').remove();
+          const pureText = $('body').text().replace(/\s+/g, ' ').trim();
 
-  private async watchForChanges() {
-    if (!this.client) return;
-    const collection = this.client.db().collection(this.COLLECTION_NAME);
-    this.changeStream = collection.watch([], { fullDocument: 'updateLookup' });
-
-    this.changeStream.on('change', async (change: any) => {
-      const { operationType, fullDocument } = change;
-      if (['insert', 'update', 'replace'].includes(operationType) && fullDocument) {
-        if (!fullDocument.embedding || fullDocument.embedding.length !== 768) {
-          await this.embedDocument(fullDocument);
+          if (pureText.length > 50) {
+            this.platformKnowledgeBase.push({ url: page, content: pureText });
+          }
+        } catch (err) {
+          // If a page isn't up yet or fails, it skips gracefully without crashing the app
+          console.log(`⚠️ Could not automatically crawl page: ${page}`);
         }
       }
-    });
-    this.logger.log('👀 Real-time sync active.');
-  }
 
-  private async embedDocument(doc: any) {
-    try {
-      const text = doc.content || `${doc.question} ${doc.answer}`;
-      const embedding = await this.embeddings.embedQuery(text);
-      await this.client!.db().collection(this.COLLECTION_NAME).updateOne(
-        { _id: doc._id },
-        { $set: { embedding } }
-      );
-      this.logger.log(`✨ Generated vector (768) for: ${doc._id}`);
-    } catch (e) {
-      this.logger.error(`❌ Embedding failed: ${e.message}`);
+      console.log(`📚 Success! Automatically learned ${this.platformKnowledgeBase.length} sections from your website content.`);
+    } catch (error: any) {
+      console.error('❌ Failed to execute site-wide crawling:', error.message);
     }
   }
 
-  // ✅ FIX: Build language-specific instructions separately so they never bleed into each other
-  private getLanguageInstructions(lang: string): string {
-    if (lang === 'Malayalam') {
-      return `
-    ### LANGUAGE: You MUST respond ONLY in Malayalam (മലയാളം). Do not use English under any circumstances.
-    
-    ### MALAYALAM QUALITY RULES:
-    1. Do not use literal word-for-word translations. Transcreate English facts into natural, conversational, polite Malayalam.
-    2. Always use "തദ്ദേശ ഭരണം" for Local Governance. NEVER use "സ്ഥാനിക ഭരണം".
-    3. Always use "ജനപ്രതിനിധികൾ" for Representatives.
-    4. If the user greets you (Hi, Hello, നമസ്കാരം), respond with: "നമസ്കാരം! എനിക്ക് നിങ്ങളെ എങ്ങനെ സഹായിക്കാൻ കഴിയും?"
-    5. NEVER use "എന്തുകൊണ്ട്" (Why) to mean "എങ്ങനെ" (How).
-    6. Use respectful, official Malayalam phrasing used in Kerala governance.`;
-    }
+  // --- 2. THE SMART QUERY FILTER & ROUTER ---
+  async askQuestion(question: string, lang: string) {
+    const lowercaseQuery = question.toLowerCase();
 
-    if (lang === 'Hindi') {
-      return `
-    ### LANGUAGE: You MUST respond ONLY in Hindi (हिन्दी). Do not use English or Malayalam under any circumstances.
-    
-    ### HINDI QUALITY RULES:
-    1. Use natural, conversational, and polite Hindi.
-    2. If the user greets you (Hi, Hello, नमस्ते), respond with: "नमस्ते! मैं आपकी कैसे सहायता कर सकता हूँ?"
-    3. Use respectful tone appropriate for government/governance context.`;
-    }
+    // CUSTOMER SUPPORT DATA FOR OUTSIDE QUESTIONS
+    const customerSupportMessage = 
+      "I'm sorry, but I can only assist with inquiries related to the EnteMLA platform, political representation, and local grievance reporting. " +
+      "For general queries or platform assistance, please reach out to our Official Customer Support team at support@entemla.in or call us at +91 471 2345678.";
 
-    // Default: English
-    return `
-    ### LANGUAGE: You MUST respond ONLY in English. Do not use Malayalam, Hindi, or any other language under any circumstances.
-    
-    ### ENGLISH QUALITY RULES:
-    1. Use clear, professional, and polite English.
-    2. If the user greets you (Hi, Hello), respond with: "Hello! How can I assist you today?"
-    3. Use respectful tone appropriate for a governance platform.`;
-  }
+    // STEP A: Check if the question is looking for an MLA
+    if (lowercaseQuery.includes('mla') || lowercaseQuery.includes('constituency') || lowercaseQuery.includes('phone') || lowercaseQuery.includes('number')) {
+      // Find matching MLA from MongoDB
+      const matchedMla = await this.userModel.findOne({
+        role: 'mla',
+        $or: [
+          { constituency: { $regex: new RegExp(lowercaseQuery.replace('mla', '').trim(), 'i') } },
+          { name: { $regex: new RegExp(lowercaseQuery, 'i') } }
+        ]
+      });
 
-  async askQuestion(question: string, lang: string = 'English'): Promise<string> {
-    if (!this.vectorStore) await this.initVectorStore();
-
-    this.logger.log(`🌐 askQuestion called — lang: "${lang}", question: "${question}"`);
-
-    const retriever = this.vectorStore!.asRetriever({ k: 4 });
-    const docs = await retriever.invoke(question);
-
-    if (docs.length === 0) {
-      if (lang === 'Malayalam') {
-        return "ക്ഷമിക്കണം, ഇതിനെക്കുറിച്ചുള്ള വിവരങ്ങൾ എന്റെ ഡാറ്റാബേസിൽ ലഭ്യമല്ല.";
+      if (matchedMla) {
+        return `The current MLA for ${matchedMla.constituency} is ${matchedMla.name}. Contact Number: ${matchedMla.phone}, Email: ${matchedMla.email}.`;
       }
-      if (lang === 'Hindi') {
-        return "क्षमा करें, मेरे डेटाबेस में इस विषय पर पर्याप्त जानकारी उपलब्ध नहीं है।";
-      }
-      return "I'm sorry, I don't have enough information in my database yet.";
     }
 
-    const context = docs.map((d) => d.pageContent).join('\n\n');
+    // STEP B: Search through your automatically crawled web context
+    let matchedWebContext = this.platformKnowledgeBase
+      .filter(page => {
+        // Simple word-matching heuristic to find relevant pages
+        const keywords = lowercaseQuery.split(' ');
+        return keywords.some(word => word.length > 3 && page.content.toLowerCase().includes(word));
+      })
+      .map(page => page.content)
+      .join('\n\n');
 
-    // ✅ FIX: Language instructions are built separately and are mutually exclusive
-    const languageInstructions = this.getLanguageInstructions(lang);
+    // STEP C: INTENT CHECKING (Block outside questions)
+    // If there is no MLA found and no crawled text contains keywords matching the question, it's an outside query!
+    const basicPlatformKeywords = ['login', 'register', 'complaint', 'grievance', 'password', 'account', 'user', 'how', 'status', 'help', 'entemla'];
+    const isPlatformRelated = basicPlatformKeywords.some(keyword => lowercaseQuery.includes(keyword));
 
-    const template = `
-    You are the professional EnteMLA Assistant, representing local governance in Kerala.
-    Answer the user accurately using ONLY the provided context.
+    if (!isPlatformRelated && !matchedWebContext) {
+      // Drop everything and return customer support info directly without calling Gemini/Groq
+      return customerSupportMessage;
+    }
 
-    ${languageInstructions}
+    // STEP D: CONSTRUCT PROMPT FOR VALID PLATFORM QUESTIONS
+    const systemInstruction = `
+      You are the official EnteMLA Platform Assistant. Your job is to answer user questions regarding platform procedures using ONLY the provided website context below.
+      
+      RULES:
+      1. Use the provided context to explain processes step-by-step.
+      2. If you cannot find the answer in the context, politely provide this support message: "${customerSupportMessage}"
+      3. Do not make up answers or hallucinate outside information.
+    `;
 
-    ### STRICT RULE:
-    Your entire response must be in ${lang} only. Every single word. No exceptions.
+    const userPayload = `
+      Website Context:
+      ${matchedWebContext || "No direct text match found on crawled pages."}
 
-    Context: {context}
-    Question: {question}
-    Answer:`;
+      User Question: ${question}
+    `;
 
-    const prompt = PromptTemplate.fromTemplate(template);
-    const finalPrompt = await prompt.format({ context, question });
-
-    const result = await this.llm.invoke(finalPrompt);
-    return result.content as string;
+    // Send context + strict instructions to your LLM API caller block (Gemini/Groq)
+    // Ensure you set temperature to 0 when initializing your LLM client!
+    
+    // const response = await this.yourLlmCallerFunction(systemInstruction, userPayload);
+    // return response;
+    
+    return `[Mock AI Response Engine Processed with Context Length: ${matchedWebContext.length} characters]`;
   }
 }

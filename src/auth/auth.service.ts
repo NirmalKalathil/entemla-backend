@@ -1,52 +1,78 @@
 import { BadRequestException, Injectable, OnModuleInit, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { User } from "./schemas/user.schema";
 import { Model } from "mongoose";
+import { User } from "./schemas/user.schema";
 import { RegisterDto } from "./dto/register.dto";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 @Injectable()
 export class AuthService implements OnModuleInit {
     constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
+    // Automatically runs when the application starts
     async onModuleInit() {
-        await this.seedMLA();
+        console.log("🔄 Starting automatic MLA directory synchronization...");
+        await this.syncMlaDirectory();
     }
 
-    async seedMLA() {
-        const mlaEmail = "mla.official@government.in"; // Using your consistent official email
-
+    // --- AUTOMATIC CRAWLER PIPELINE ---
+    async syncMlaDirectory() {
         try {
-            const existingMLA = await this.userModel.findOne({ email: mlaEmail });
+            const targetUrl = "https://www.niyamasabha.nic.in/index.php/content/member_contacts";
+            const { data } = await axios.get(targetUrl, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+            });
 
-            if (!existingMLA) {
-                console.log('🚀 Seeding MLA details into database...');
+            const $ = cheerio.load(data);
+            const rawMlaRecords: any[] = [];
 
-                const mlaData = {
-                    name: "Hon. MLA Name",
-                    email: mlaEmail,
-                    password: "qwerty123456", // ⚠️ In production, use bcrypt to hash this!
-                    phone: "9876543210",
-                    district: "Ernakulam",
-                    constituency: "Greenfield Constituency",
-                    place: "Kochi", 
-                    role: "mla"
-                };
+            $("table tbody tr").each((index, element) => {
+                const columns = $(element).find("td");
+                if (columns.length >= 5) {
+                    const rawNameAndConstituency = $(columns[1]).text().trim(); 
+                    const phoneText = $(columns[3]).text().trim(); 
+                    const email = $(columns[4]).text().trim();
 
-                const mla = new this.userModel(mlaData);
-                await mla.save();
-                console.log('✅ MLA seeded successfully!');
-            } else {
-                console.log('✅ MLA already exists in database.');
+                    const nameParts = rawNameAndConstituency.split("(");
+                    const name = nameParts[0]?.trim();
+                    const constituency = nameParts[1]?.replace(")", "")?.trim();
+
+                    const phoneMatch = phoneText.match(/(9|8|7|6)\d{9}/);
+                    const cleanPhone = phoneMatch ? phoneMatch[0] : "Not Provided";
+
+                    if (email && constituency) {
+                        rawMlaRecords.push({
+                            name: name || "Hon. MLA",
+                            email: email,
+                            phone: cleanPhone,
+                            constituency: constituency,
+                            district: "Kerala State", 
+                            role: "mla",
+                            password: "defaultPassword123" // Placeholder password
+                        });
+                    }
+                }
+            });
+
+            console.log(`🌐 Scraper found ${rawMlaRecords.length} MLAs online. Syncing to MongoDB...`);
+
+            for (const mla of rawMlaRecords) {
+                await this.userModel.findOneAndUpdate(
+                    { email: mla.email }, 
+                    { $set: mla },        
+                    { upsert: true, new: true } 
+                );
             }
+
+            console.log("✅ Database sync complete. MLA profiles are up-to-date.");
+
         } catch (error: any) {
-            if (error.code === 11000) {
-                console.log('✅ MLA already exists (duplicate key handled).');
-            } else {
-                console.error('❌ Error seeding MLA:', error.message);
-            }
+            console.error("❌ Automation Sync Error:", error.message);
         }
     }
 
+    // --- AUTHENTICATION METHODS (Fixes your TS2339 Compiler Errors) ---
     async register(dto: RegisterDto) {
         const existing = await this.userModel.findOne({ email: dto.email });
         if (existing) {
