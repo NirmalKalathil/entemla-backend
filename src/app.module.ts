@@ -26,10 +26,8 @@ import { RagModule } from './rag/rag.module'; // 1. Added RagModule import
 
     AuthModule,
     ComplaintsModule,
-
+    RagModule,
     UsersModule,
-
-
   ],
   controllers: [AppController],
   providers: [AppService],
