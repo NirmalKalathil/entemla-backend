@@ -6,11 +6,16 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
+
 import { ComplaintsService } from './complaints.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { CreateComplaintDto } from './dto/complaint.dto';
 import { Complaint } from './schemas/complaint.schema';
+
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('complaints')
 export class ComplaintsController {
@@ -26,6 +31,13 @@ export class ComplaintsController {
     return await this.complaintsService.findByCitizen(citizenId);
   }
 
+  // EMPLOYEE CONSTITUENCY FILTER
+  @UseGuards(JwtAuthGuard)
+  @Get('employee')
+  getEmployeeComplaints(@Req() req: any) {
+    return this.complaintsService.getComplaintsForUser(req.user);
+  }
+
   @Get()
   async getAll() {
     return await this.complaintsService.findAll();
@@ -35,24 +47,22 @@ export class ComplaintsController {
   async getPublicComplaints() {
     return await this.complaintsService.getPublicComplaints();
   }
-// Replace ONLY these two methods in complaints.controller.ts
 
-@Patch(':id/like')
-async likeComplaint(
-  @Param('id') id: string,
-  @Body('userId') userId: string,
-) {
-  return this.complaintsService.likeComplaint(id, userId);
-}
+  @Patch(':id/like')
+  async likeComplaint(
+    @Param('id') id: string,
+    @Body('userId') userId: string,
+  ) {
+    return this.complaintsService.likeComplaint(id, userId);
+  }
 
-@Patch(':id/repost')
-async repostComplaint(
-  @Param('id') id: string,
-  @Body('userId') userId: string,
-) {
-  return this.complaintsService.repostComplaint(id, userId);
-}
-  
+  @Patch(':id/repost')
+  async repostComplaint(
+    @Param('id') id: string,
+    @Body('userId') userId: string,
+  ) {
+    return this.complaintsService.repostComplaint(id, userId);
+  }
 
   @Get('stats')
   async getStats() {
@@ -72,22 +82,28 @@ async repostComplaint(
   }
 
   @Post(':id/comment')
-  async addComment(@Param('id') id: string, @Body() body: CreateCommentDto) {
+  async addComment(
+    @Param('id') id: string,
+    @Body() body: CreateCommentDto,
+  ) {
     return this.complaintsService.addComment(id, body);
   }
 
   @Patch(':id/reply')
-  async addReply(
+  addReply(
     @Param('id') id: string,
-    @Body('text') text: string,
-    @Body('role') role: string,
-    @Body('username') username: string,
+    @Body() body: any,
   ) {
-    return this.complaintsService.addReply(id, text, role, username);
+    return this.complaintsService.addReply(
+      id,
+      body.replyText,
+      body.fromRole,
+      body.username,
+    );
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.complaintsService.remove(id);
   }
-} // Class closes here properly
+}

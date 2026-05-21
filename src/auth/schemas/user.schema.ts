@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class User extends Document {
+
   @Prop({ required: true })
   name: string;
 
@@ -12,13 +13,12 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
-  // Added District field
   @Prop({ required: true })
   district: string;
 
-  // Added Constituency field
+  // 🔥 IMPORTANT: use ONE consistent field (string ID system)
   @Prop({ required: true })
-  constituency: string;
+  constituencyId: string;
 
   @Prop({ required: true })
   place: string;
@@ -26,8 +26,29 @@ export class User extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true, enum: ['citizen', 'employee', 'mla'], default: 'citizen' })
-  role!: string;
+  // 👇 CORE ROLE SYSTEM
+  @Prop({
+    required: true,
+    enum: ['citizen', 'employee', 'mla', 'admin'],
+    default: 'citizen'
+  })
+  role: string;
+
+  // 🏛️ MLA-specific ID
+  @Prop({ unique: true, sparse: true })
+  mlaId?: string;
+
+  // 👷 Employee-specific ID
+  @Prop({ unique: true, sparse: true })
+  employeeId?: string;
+
+  // 👑 Who created this user (admin tracking)
+  @Prop()
+  createdBy?: string;
+
+  // 🔐 optional (VERY useful later)
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

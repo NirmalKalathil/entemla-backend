@@ -3,7 +3,7 @@ export declare class RegisterDto {
     phone: string;
     email: string;
     district: string;
-    constituency: string;
+    constituencyId: string;
     place: string;
     role: string;
     password: string;

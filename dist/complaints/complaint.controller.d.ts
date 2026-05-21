@@ -13,6 +13,13 @@ export declare class ComplaintsController {
     } & {
         id: string;
     })[]>;
+    getEmployeeComplaints(req: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
     getAll(): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -21,8 +28,18 @@ export declare class ComplaintsController {
         id: string;
     })[]>;
     getPublicComplaints(): Promise<Complaint[]>;
-    likeComplaint(id: string): Promise<Complaint | null>;
-    repostComplaint(id: string): Promise<Complaint | null>;
+    likeComplaint(id: string, userId: string): Promise<{
+        success: boolean;
+        message: string;
+        likes: number;
+        likedBy: import("mongoose").Types.ObjectId[];
+    }>;
+    repostComplaint(id: string, userId: string): Promise<{
+        success: boolean;
+        message: string;
+        reposts: number;
+        repostedBy: import("mongoose").Types.ObjectId[];
+    }>;
     getStats(): Promise<{
         totalComplaints: number;
         resolvedComplaints: number;
@@ -37,7 +54,7 @@ export declare class ComplaintsController {
         text: string;
         date: Date;
     }>;
-    addReply(id: string, text: string, role: string, username: string): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+    addReply(id: string, body: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: import("mongoose").Types.ObjectId;
     } & {
         __v: number;

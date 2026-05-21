@@ -18,7 +18,7 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
-  constituency: string; // Changed from IsOptional to match your form
+  constituencyId: string; // Changed from IsOptional to match your form
 
   @IsString()
   @IsNotEmpty()

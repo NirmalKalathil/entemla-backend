@@ -53,11 +53,11 @@ export class Complaint {
   reposts!: number;
 
   @Prop({
-  type: [Types.ObjectId],
-  ref: 'User',
-  default: [],
-})
-repostedBy!: Types.ObjectId[];
+    type: [Types.ObjectId],
+    ref: 'User',
+    default: [],
+  })
+  repostedBy!: Types.ObjectId[];
 
   @Prop({ default: 0 })
   views!: number;
@@ -65,13 +65,16 @@ repostedBy!: Types.ObjectId[];
   @Prop({ default: "" })
   comment!: string;
 
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+constituencyId: Types.ObjectId;
+
   @Prop({
     type: [
       {
         userId: {
           type: Types.ObjectId,
           ref: 'User',
-          
+
         },
 
         text: {
@@ -79,23 +82,24 @@ repostedBy!: Types.ObjectId[];
           required: true,
         },
         username: {
-        type: String,
-        
-      },
+          type: String,
+          required: true,
+        },
         from: {
-        type: String,
-        default: 'Citizen',
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
-role: {
-        type: String,
-        default: 'citizen',
-      },
-        
-        
+          type: String,
+          default: 'Citizen',
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        role: {
+          type: String,
+          enum: ['citizen', 'employee', 'mla'],
+          default: 'citizen',
+        },
+
+
       },
     ],
 
@@ -103,11 +107,11 @@ role: {
   })
   replies !: {
     userId?: Types.ObjectId;
-  username?: string;
-  text: string;
-  role?: string;
-  
-  from?: string;
+    username?: string;
+    text: string;
+    role?: string;
+
+    from?: string;
     createdAt?: Date;
 
   }[];

@@ -34,7 +34,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], User.prototype, "constituency", void 0);
+], User.prototype, "constituencyId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
@@ -44,11 +44,31 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: ['citizen', 'employee', 'mla'], default: 'citizen' }),
+    (0, mongoose_1.Prop)({
+        required: true,
+        enum: ['citizen', 'employee', 'mla', 'admin'],
+        default: 'citizen'
+    }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ unique: true, sparse: true }),
+    __metadata("design:type", String)
+], User.prototype, "mlaId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ unique: true, sparse: true }),
+    __metadata("design:type", String)
+], User.prototype, "employeeId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "createdBy", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isActive", void 0);
 exports.User = User = __decorate([
-    (0, mongoose_1.Schema)()
+    (0, mongoose_1.Schema)({ timestamps: true })
 ], User);
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
 //# sourceMappingURL=user.schema.js.map

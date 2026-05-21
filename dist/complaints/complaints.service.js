@@ -17,21 +17,31 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const complaint_schema_1 = require("./schemas/complaint.schema");
+const user_schema_1 = require("../auth/schemas/user.schema");
 let ComplaintsService = class ComplaintsService {
-    constructor(complaintModel) {
+    constructor(complaintModel, userModel) {
         this.complaintModel = complaintModel;
+        this.userModel = userModel;
     }
     async create(createComplaintDto) {
+        const citizen = await this.userModel.findById(createComplaintDto.citizenId);
+        if (!citizen) {
+            throw new common_1.BadRequestException("Invalid citizen ID");
+        }
+        if (!citizen.constituencyId) {
+            throw new common_1.BadRequestException("Citizen missing constituencyId");
+        }
         const newComplaint = new this.complaintModel({
             ...createComplaintDto,
-            citizenId: createComplaintDto.citizenId,
+            citizenId: citizen._id,
+            constituencyId: citizen.constituencyId,
         });
         return await newComplaint.save();
     }
     async addComment(id, body) {
         const complaint = await this.complaintModel.findById(id);
         if (!complaint) {
-            throw new Error('Complaint not found');
+            throw new common_1.BadRequestException('Complaint not found');
         }
         const newComment = {
             userId: new mongoose_2.Types.ObjectId(body.userId),
@@ -63,11 +73,59 @@ let ComplaintsService = class ComplaintsService {
             .sort({ createdAt: -1 })
             .exec();
     }
-    async likeComplaint(id) {
-        return await this.complaintModel.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true });
+    async likeComplaint(id, userId) {
+        const complaint = await this.complaintModel.findById(id);
+        if (!complaint) {
+            throw new Error('Complaint not found');
+        }
+        if (!complaint.likedBy) {
+            complaint.likedBy = [];
+        }
+        const alreadyLiked = complaint.likedBy.some((likedUserId) => likedUserId.toString() === userId.toString());
+        if (alreadyLiked) {
+            return {
+                success: false,
+                message: 'You already liked this complaint',
+                likes: complaint.likedBy.length,
+                likedBy: complaint.likedBy,
+            };
+        }
+        complaint.likedBy.push(new mongoose_2.Types.ObjectId(userId));
+        complaint.likes = complaint.likedBy.length;
+        const updatedComplaint = await complaint.save();
+        return {
+            success: true,
+            message: 'Complaint liked successfully',
+            likes: updatedComplaint.likes,
+            likedBy: updatedComplaint.likedBy,
+        };
     }
-    async repostComplaint(id) {
-        return await this.complaintModel.findByIdAndUpdate(id, { $inc: { reposts: 1 } }, { new: true });
+    async repostComplaint(id, userId) {
+        const complaint = await this.complaintModel.findById(id);
+        if (!complaint) {
+            throw new Error('Complaint not found');
+        }
+        if (!complaint.repostedBy) {
+            complaint.repostedBy = [];
+        }
+        const alreadyReposted = complaint.repostedBy.some((repostUserId) => repostUserId.toString() === userId.toString());
+        if (alreadyReposted) {
+            return {
+                success: false,
+                message: 'You already reposted this complaint',
+                reposts: complaint.repostedBy.length,
+                repostedBy: complaint.repostedBy,
+            };
+        }
+        complaint.repostedBy.push(new mongoose_2.Types.ObjectId(userId));
+        complaint.reposts = complaint.repostedBy.length;
+        const updatedComplaint = await complaint.save();
+        return {
+            success: true,
+            message: 'Complaint reposted successfully',
+            reposts: updatedComplaint.reposts,
+            repostedBy: updatedComplaint.repostedBy,
+        };
     }
     async addReply(id, replyText, fromRole, username) {
         const normalizedRole = (fromRole || 'citizen').toLowerCase();
@@ -81,7 +139,7 @@ let ComplaintsService = class ComplaintsService {
             role: normalizedRole,
             createdAt: new Date(),
         };
-        return this.complaintModel.findByIdAndUpdate(id, { $push: { replies: newReply } }, { new: true });
+        return this.complaintModel.findByIdAndUpdate(id, { $push: { replies: newReply } }, { returnDocument: "after" });
     }
     async getComplaintStats() {
         const totalComplaints = await this.complaintModel.countDocuments();
@@ -101,7 +159,7 @@ let ComplaintsService = class ComplaintsService {
         return { totalComplaints, resolvedComplaints, inProgressComplaints, avgResponse };
     }
     async updateStatus(id, status, comment) {
-        return this.complaintModel.findByIdAndUpdate(id, { status, comment }, { new: true });
+        return this.complaintModel.findByIdAndUpdate(id, { status, comment }, { returnDocument: "after" });
     }
     async remove(id) {
         return this.complaintModel.findByIdAndDelete(id);
@@ -120,13 +178,26 @@ let ComplaintsService = class ComplaintsService {
                     createdAt: new Date(),
                 },
             },
-        }, { new: true });
+        }, { returnDocument: "after" });
+    }
+    async getComplaintsForUser(user) {
+        if (!user?.role) {
+            throw new Error("Invalid JWT user payload");
+        }
+        if (user.role === 'admin') {
+            return this.complaintModel.find().populate('citizenId');
+        }
+        return this.complaintModel.find({
+            constituencyId: user.constituencyId,
+        });
     }
 };
 exports.ComplaintsService = ComplaintsService;
 exports.ComplaintsService = ComplaintsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(complaint_schema_1.Complaint.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model])
 ], ComplaintsService);
 //# sourceMappingURL=complaints.service.js.map

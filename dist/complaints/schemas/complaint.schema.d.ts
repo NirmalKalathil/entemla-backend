@@ -11,9 +11,12 @@ export declare class Complaint {
     evidence?: string;
     location?: string;
     likes: number;
+    likedBy: Types.ObjectId[];
     reposts: number;
+    repostedBy: Types.ObjectId[];
     views: number;
     comment: string;
+    constituencyId: Types.ObjectId;
     replies: {
         userId?: Types.ObjectId;
         username?: string;
@@ -122,7 +125,25 @@ export declare const ComplaintSchema: import("mongoose").Schema<Complaint, impor
     }, "id"> & {
         id: string;
     }> | undefined;
+    likedBy?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId[], Complaint, import("mongoose").Document<unknown, {}, Complaint, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
     reposts?: import("mongoose").SchemaDefinitionProperty<number, Complaint, import("mongoose").Document<unknown, {}, Complaint, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    repostedBy?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId[], Complaint, import("mongoose").Document<unknown, {}, Complaint, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Complaint & {
         _id: Types.ObjectId;
@@ -141,6 +162,15 @@ export declare const ComplaintSchema: import("mongoose").Schema<Complaint, impor
         id: string;
     }> | undefined;
     comment?: import("mongoose").SchemaDefinitionProperty<string, Complaint, import("mongoose").Document<unknown, {}, Complaint, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    constituencyId?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId, Complaint, import("mongoose").Document<unknown, {}, Complaint, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Complaint & {
         _id: Types.ObjectId;

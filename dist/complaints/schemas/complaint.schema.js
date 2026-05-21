@@ -60,9 +60,25 @@ __decorate([
     __metadata("design:type", Number)
 ], Complaint.prototype, "likes", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({
+        type: [mongoose_2.Types.ObjectId],
+        ref: 'User',
+        default: [],
+    }),
+    __metadata("design:type", Array)
+], Complaint.prototype, "likedBy", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ default: 0 }),
     __metadata("design:type", Number)
 ], Complaint.prototype, "reposts", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: [mongoose_2.Types.ObjectId],
+        ref: 'User',
+        default: [],
+    }),
+    __metadata("design:type", Array)
+], Complaint.prototype, "repostedBy", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: 0 }),
     __metadata("design:type", Number)
@@ -71,6 +87,10 @@ __decorate([
     (0, mongoose_1.Prop)({ default: "" }),
     __metadata("design:type", String)
 ], Complaint.prototype, "comment", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'User', required: true }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Complaint.prototype, "constituencyId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
         type: [
@@ -85,6 +105,7 @@ __decorate([
                 },
                 username: {
                     type: String,
+                    required: true,
                 },
                 from: {
                     type: String,
@@ -96,6 +117,7 @@ __decorate([
                 },
                 role: {
                     type: String,
+                    enum: ['citizen', 'employee', 'mla'],
                     default: 'citizen',
                 },
             },

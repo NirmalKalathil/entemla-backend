@@ -21,11 +21,17 @@ let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;
     }
+    async getAllUsers() {
+        return this.userModel.find();
+    }
     async getCitizens() {
         return this.userModel.find({ role: 'citizen' });
     }
-    findAll() {
-        return this.userModel.find();
+    async getUserById(id) {
+        return this.userModel.findById(id);
+    }
+    async getMyProfile(id) {
+        return await this.userModel.findById(id);
     }
 };
 exports.UsersService = UsersService;

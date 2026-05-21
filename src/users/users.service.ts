@@ -7,17 +7,22 @@ import { User } from '../auth/schemas/user.schema';
 export class UsersService {
   constructor(
     @InjectModel(User.name)
-    private readonly userModel: Model<User>,
-  ) {}
+    private userModel: Model<User>,
+  ) { }
 
-  // findCitizens() {
-  //   return this.userModel.find({ role: 'citizen' });
-  // }
-
-  async getCitizens() {
-  return this.userModel.find({ role: 'citizen' });
-}
-  findAll() {
+  async getAllUsers() {
     return this.userModel.find();
   }
+
+  async getCitizens() {
+    return this.userModel.find({ role: 'citizen' });
+  }
+
+  async getUserById(id: string) {
+    return this.userModel.findById(id);
+  }
+
+  async getMyProfile(id: string) {
+  return await this.userModel.findById(id);
+}
 }

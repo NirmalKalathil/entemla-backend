@@ -2,10 +2,18 @@ import { Model, Types } from 'mongoose';
 import { Complaint } from './schemas/complaint.schema';
 import { CreateComplaintDto } from './dto/complaint.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { User } from '../auth/schemas/user.schema';
 export declare class ComplaintsService {
     private complaintModel;
-    constructor(complaintModel: Model<Complaint>);
-    create(createComplaintDto: CreateComplaintDto): Promise<Complaint>;
+    private userModel;
+    constructor(complaintModel: Model<Complaint>, userModel: Model<User>);
+    create(createComplaintDto: CreateComplaintDto): Promise<import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    }>;
     addComment(id: string, body: CreateCommentDto): Promise<{
         userId: Types.ObjectId;
         username: string;
@@ -28,8 +36,18 @@ export declare class ComplaintsService {
         id: string;
     })[]>;
     getPublicComplaints(): Promise<Complaint[]>;
-    likeComplaint(id: string): Promise<Complaint | null>;
-    repostComplaint(id: string): Promise<Complaint | null>;
+    likeComplaint(id: string, userId: string): Promise<{
+        success: boolean;
+        message: string;
+        likes: number;
+        likedBy: Types.ObjectId[];
+    }>;
+    repostComplaint(id: string, userId: string): Promise<{
+        success: boolean;
+        message: string;
+        reposts: number;
+        repostedBy: Types.ObjectId[];
+    }>;
     addReply(id: string, replyText: string, fromRole: string, username: string): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: Types.ObjectId;
     } & {
@@ -58,4 +76,11 @@ export declare class ComplaintsService {
     } & {
         id: string;
     }) | null>;
+    getComplaintsForUser(user: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
 }

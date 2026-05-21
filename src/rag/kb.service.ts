@@ -25,7 +25,7 @@ export class KbService implements OnModuleInit {
     await this.seedInitialKnowledge();
     
     // Delay initial crawl to let the app fully start
-    setTimeout(() => this.crawlEntireWebsite('http://127.0.0.1:3000'), 8000);
+    setTimeout(() => this.crawlEntireWebsite('http://localhost:5173/'), 8000);
   }
 
   private async seedInitialKnowledge() {
@@ -74,7 +74,7 @@ export class KbService implements OnModuleInit {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async scheduledCrawl() {
     this.logger.log('🔄 Starting scheduled daily crawl...');
-    await this.crawlEntireWebsite('http://127.0.0.1:3000');
+    await this.crawlEntireWebsite('http://localhost:5173/');
   }
 
   async crawlEntireWebsite(baseUrl: string) {

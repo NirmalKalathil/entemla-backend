@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const complaints_service_1 = require("./complaints.service");
 const create_comment_dto_1 = require("./dto/create-comment.dto");
 const complaint_dto_1 = require("./dto/complaint.dto");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 let ComplaintsController = class ComplaintsController {
     constructor(complaintsService) {
         this.complaintsService = complaintsService;
@@ -27,17 +28,20 @@ let ComplaintsController = class ComplaintsController {
     async getByCitizen(citizenId) {
         return await this.complaintsService.findByCitizen(citizenId);
     }
+    getEmployeeComplaints(req) {
+        return this.complaintsService.getComplaintsForUser(req.user);
+    }
     async getAll() {
         return await this.complaintsService.findAll();
     }
     async getPublicComplaints() {
         return await this.complaintsService.getPublicComplaints();
     }
-    async likeComplaint(id) {
-        return await this.complaintsService.likeComplaint(id);
+    async likeComplaint(id, userId) {
+        return this.complaintsService.likeComplaint(id, userId);
     }
-    async repostComplaint(id) {
-        return await this.complaintsService.repostComplaint(id);
+    async repostComplaint(id, userId) {
+        return this.complaintsService.repostComplaint(id, userId);
     }
     async getStats() {
         return await this.complaintsService.getComplaintStats();
@@ -48,8 +52,8 @@ let ComplaintsController = class ComplaintsController {
     async addComment(id, body) {
         return this.complaintsService.addComment(id, body);
     }
-    async addReply(id, text, role, username) {
-        return this.complaintsService.addReply(id, text, role, username);
+    addReply(id, body) {
+        return this.complaintsService.addReply(id, body.replyText, body.fromRole, body.username);
     }
     remove(id) {
         return this.complaintsService.remove(id);
@@ -71,6 +75,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "getByCitizen", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('employee'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ComplaintsController.prototype, "getEmployeeComplaints", null);
+__decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -85,15 +97,17 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id/like'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('userId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "likeComplaint", null);
 __decorate([
     (0, common_1.Patch)(':id/repost'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('userId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "repostComplaint", null);
 __decorate([
@@ -121,12 +135,10 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id/reply'),
     __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)('text')),
-    __param(2, (0, common_1.Body)('role')),
-    __param(3, (0, common_1.Body)('username')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
 ], ComplaintsController.prototype, "addReply", null);
 __decorate([
     (0, common_1.Delete)(':id'),

@@ -1,32 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Complaint } from './schemas/complaint.schema';
 import { CreateComplaintDto } from './dto/complaint.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { User } from '../auth/schemas/user.schema';
 
 @Injectable()
 export class ComplaintsService {
 
-  
+
 
   constructor(
     @InjectModel(Complaint.name)
     private complaintModel: Model<Complaint>,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
   ) { }
 
-  async create(createComplaintDto: CreateComplaintDto): Promise<Complaint> {
+  async create(createComplaintDto: CreateComplaintDto) {
+    const citizen = await this.userModel.findById(createComplaintDto.citizenId);
+
+    if (!citizen) {
+      throw new BadRequestException("Invalid citizen ID");
+    }
+
+    if (!citizen.constituencyId) {
+      throw new BadRequestException("Citizen missing constituencyId");
+    }
+
     const newComplaint = new this.complaintModel({
       ...createComplaintDto,
-      citizenId: createComplaintDto.citizenId,
+      citizenId: citizen._id,
+      constituencyId: citizen.constituencyId, // ✅ trusted source
     });
+
     return await newComplaint.save();
   }
 
   async addComment(id: string, body: CreateCommentDto) {
     const complaint = await this.complaintModel.findById(id);
     if (!complaint) {
-      throw new Error('Complaint not found');
+      throw new BadRequestException('Complaint not found');
     }
     const newComment = {
       userId: new Types.ObjectId(body.userId),
@@ -61,92 +76,92 @@ export class ComplaintsService {
       .sort({ createdAt: -1 })
       .exec();
   }
-// Replace your existing likeComplaint() and repostComplaint()
-// methods in complaints.service.ts with the following:
+  // Replace your existing likeComplaint() and repostComplaint()
+  // methods in complaints.service.ts with the following:
 
-async likeComplaint(id: string, userId: string) {
-  const complaint = await this.complaintModel.findById(id);
+  async likeComplaint(id: string, userId: string) {
+    const complaint = await this.complaintModel.findById(id);
 
-  if (!complaint) {
-    throw new Error('Complaint not found');
-  }
+    if (!complaint) {
+      throw new Error('Complaint not found');
+    }
 
-  // Initialize likedBy if undefined
-  if (!complaint.likedBy) {
-    complaint.likedBy = [];
-  }
+    // Initialize likedBy if undefined
+    if (!complaint.likedBy) {
+      complaint.likedBy = [];
+    }
 
-  // Check whether this user already liked
-  const alreadyLiked = complaint.likedBy.some(
-    (likedUserId) => likedUserId.toString() === userId.toString(),
-  );
+    // Check whether this user already liked
+    const alreadyLiked = complaint.likedBy.some(
+      (likedUserId) => likedUserId.toString() === userId.toString(),
+    );
 
-  if (alreadyLiked) {
+    if (alreadyLiked) {
+      return {
+        success: false,
+        message: 'You already liked this complaint',
+        likes: complaint.likedBy.length,
+        likedBy: complaint.likedBy,
+      };
+    }
+
+    // Add user to likedBy
+    complaint.likedBy.push(new Types.ObjectId(userId));
+
+    // Update likes count
+    complaint.likes = complaint.likedBy.length;
+
+    const updatedComplaint = await complaint.save();
+
     return {
-      success: false,
-      message: 'You already liked this complaint',
-      likes: complaint.likedBy.length,
-      likedBy: complaint.likedBy,
+      success: true,
+      message: 'Complaint liked successfully',
+      likes: updatedComplaint.likes,
+      likedBy: updatedComplaint.likedBy,
     };
   }
 
-  // Add user to likedBy
-  complaint.likedBy.push(new Types.ObjectId(userId));
+  async repostComplaint(id: string, userId: string) {
+    const complaint = await this.complaintModel.findById(id);
 
-  // Update likes count
-  complaint.likes = complaint.likedBy.length;
+    if (!complaint) {
+      throw new Error('Complaint not found');
+    }
 
-  const updatedComplaint = await complaint.save();
+    // Initialize repostedBy if undefined
+    if (!complaint.repostedBy) {
+      complaint.repostedBy = [];
+    }
 
-  return {
-    success: true,
-    message: 'Complaint liked successfully',
-    likes: updatedComplaint.likes,
-    likedBy: updatedComplaint.likedBy,
-  };
-}
+    // Check whether this user already reposted
+    const alreadyReposted = complaint.repostedBy.some(
+      (repostUserId) => repostUserId.toString() === userId.toString(),
+    );
 
-async repostComplaint(id: string, userId: string) {
-  const complaint = await this.complaintModel.findById(id);
+    if (alreadyReposted) {
+      return {
+        success: false,
+        message: 'You already reposted this complaint',
+        reposts: complaint.repostedBy.length,
+        repostedBy: complaint.repostedBy,
+      };
+    }
 
-  if (!complaint) {
-    throw new Error('Complaint not found');
-  }
+    // Add user to repostedBy
+    complaint.repostedBy.push(new Types.ObjectId(userId));
 
-  // Initialize repostedBy if undefined
-  if (!complaint.repostedBy) {
-    complaint.repostedBy = [];
-  }
+    // Update repost count
+    complaint.reposts = complaint.repostedBy.length;
 
-  // Check whether this user already reposted
-  const alreadyReposted = complaint.repostedBy.some(
-    (repostUserId) => repostUserId.toString() === userId.toString(),
-  );
+    const updatedComplaint = await complaint.save();
 
-  if (alreadyReposted) {
     return {
-      success: false,
-      message: 'You already reposted this complaint',
-      reposts: complaint.repostedBy.length,
-      repostedBy: complaint.repostedBy,
+      success: true,
+      message: 'Complaint reposted successfully',
+      reposts: updatedComplaint.reposts,
+      repostedBy: updatedComplaint.repostedBy,
     };
   }
-
-  // Add user to repostedBy
-  complaint.repostedBy.push(new Types.ObjectId(userId));
-
-  // Update repost count
-  complaint.reposts = complaint.repostedBy.length;
-
-  const updatedComplaint = await complaint.save();
-
-  return {
-    success: true,
-    message: 'Complaint reposted successfully',
-    reposts: updatedComplaint.reposts,
-    repostedBy: updatedComplaint.repostedBy,
-  };
-}
   async addReply(
     id: string,
     replyText: string,
@@ -173,7 +188,7 @@ async repostComplaint(id: string, userId: string) {
     return this.complaintModel.findByIdAndUpdate(
       id,
       { $push: { replies: newReply } },
-      { new: true },
+      { returnDocument: "after" },
     );
   }
 
@@ -203,7 +218,7 @@ async repostComplaint(id: string, userId: string) {
     return this.complaintModel.findByIdAndUpdate(
       id,
       { status, comment },
-      { new: true },
+      { returnDocument: "after" },
     );
   }
 
@@ -230,7 +245,21 @@ async repostComplaint(id: string, userId: string) {
           },
         },
       },
-      { new: true },
+      { returnDocument: "after" },
     );
+  }
+
+  async getComplaintsForUser(user: any) {
+    if (!user?.role) {
+      throw new Error("Invalid JWT user payload");
+    }
+
+    if (user.role === 'admin') {
+      return this.complaintModel.find().populate('citizenId');
+    }
+
+    return this.complaintModel.find({
+      constituencyId: user.constituencyId,
+    });
   }
 }

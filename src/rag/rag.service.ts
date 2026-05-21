@@ -117,7 +117,7 @@ export class RagService implements OnModuleInit, OnModuleDestroy {
   }
 
   private async performInitialCrawl() {
-    const baseUrl = 'http://127.0.0.1:3000';
+    const baseUrl = 'http://localhost:5173';
     const pages = ['/', '/about', '/contact', '/complaints'];
 
     for (const page of pages) {

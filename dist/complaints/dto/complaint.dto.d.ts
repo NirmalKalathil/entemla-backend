@@ -15,5 +15,5 @@ export declare class CreateComplaintDto {
     visibility?: VisibilityType;
     location?: string;
     evidence?: string;
-    citizenId: String;
+    citizenId: string;
 }

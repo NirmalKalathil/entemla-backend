@@ -1,12 +1,14 @@
-import { OnModuleInit } from "@nestjs/common";
-import { User } from "./schemas/user.schema";
 import { Model } from "mongoose";
+import { User } from "./schemas/user.schema";
 import { RegisterDto } from "./dto/register.dto";
-export declare class AuthService implements OnModuleInit {
+import { EmployeeLoginDto } from "./dto/employee_login.dto";
+import { JwtService } from "@nestjs/jwt";
+import { MlaLoginDto } from "./dto/mla_login.dto";
+import { LoginDto } from "./dto/login.dto";
+export declare class AuthService {
     private userModel;
-    constructor(userModel: Model<User>);
-    onModuleInit(): Promise<void>;
-    seedMLA(): Promise<void>;
+    private jwtService;
+    constructor(userModel: Model<User>, jwtService: JwtService);
     register(dto: RegisterDto): Promise<import("mongoose").Document<unknown, {}, User, {}, import("mongoose").DefaultSchemaOptions> & User & Required<{
         _id: import("mongoose").Types.ObjectId;
     }> & {
@@ -14,17 +16,39 @@ export declare class AuthService implements OnModuleInit {
     } & {
         id: string;
     }>;
-    login(loginDto: any): Promise<{
+    login(loginDto: LoginDto): Promise<{
         message: string;
+        token: string;
         user: {
             _id: import("mongoose").Types.ObjectId;
             name: string;
             email: string;
-            phone: string;
-            district: string;
-            constituency: string;
-            place: string;
+            role: string;
+            phone: string | null;
+            district: string | null;
+            place: string | null;
+            constituencyId: string | null;
+        };
+    }>;
+    employeeLogin(dto: EmployeeLoginDto): Promise<{
+        message: string;
+        user: {
+            _id: import("mongoose").Types.ObjectId;
+            employeeId: string | undefined;
+            constituencyId: string;
             role: string;
         };
+        token: string;
+    }>;
+    mlaLogin(dto: MlaLoginDto): Promise<{
+        message: string;
+        user: {
+            _id: import("mongoose").Types.ObjectId;
+            mlaId: string | undefined;
+            name: string;
+            constituencyId: string;
+            role: string;
+        };
+        token: string;
     }>;
 }

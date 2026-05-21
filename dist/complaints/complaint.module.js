@@ -12,13 +12,16 @@ const mongoose_1 = require("@nestjs/mongoose");
 const complaint_controller_1 = require("./complaint.controller");
 const complaints_service_1 = require("./complaints.service");
 const complaint_schema_1 = require("./schemas/complaint.schema");
+const user_schema_1 = require("../auth/schemas/user.schema");
 let ComplaintsModule = class ComplaintsModule {
 };
 exports.ComplaintsModule = ComplaintsModule;
 exports.ComplaintsModule = ComplaintsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: complaint_schema_1.Complaint.name, schema: complaint_schema_1.ComplaintSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: complaint_schema_1.Complaint.name, schema: complaint_schema_1.ComplaintSchema },
+                { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
+            ]),
         ],
         controllers: [complaint_controller_1.ComplaintsController],
         providers: [complaints_service_1.ComplaintsService],

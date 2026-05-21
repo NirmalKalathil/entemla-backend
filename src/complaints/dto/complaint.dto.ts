@@ -57,5 +57,6 @@ export class CreateComplaintDto {
     message: 'Invalid citizen ID',
   })
   @IsNotEmpty()
-  citizenId! : String;
+  citizenId! : string;
+
 }
