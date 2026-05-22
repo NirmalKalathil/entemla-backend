@@ -18,6 +18,7 @@ export declare class ComplaintsService {
         userId: Types.ObjectId;
         username: string;
         role: string;
+        from: string;
         text: string;
         date: Date;
     }>;
@@ -76,7 +77,22 @@ export declare class ComplaintsService {
     } & {
         id: string;
     }) | null>;
-    getComplaintsForUser(user: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+    getComplaintsForUser(user: any): Promise<Complaint[]>;
+    getAllComplaints(): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
+    getComplaintsByConstituency(constituencyId: string): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
+    getForMla(user: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: Types.ObjectId;
     } & {
         __v: number;

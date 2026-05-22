@@ -6,7 +6,14 @@ export declare class ComplaintsController {
     private readonly complaintsService;
     constructor(complaintsService: ComplaintsService);
     create(dto: CreateComplaintDto): Promise<Complaint>;
-    getByCitizen(citizenId: string): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+    getPublicComplaints(): Promise<Complaint[]>;
+    getStats(): Promise<{
+        totalComplaints: number;
+        resolvedComplaints: number;
+        inProgressComplaints: number;
+        avgResponse: string | number;
+    }>;
+    getMyComplaints(req: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: import("mongoose").Types.ObjectId;
     } & {
         __v: number;
@@ -20,6 +27,20 @@ export declare class ComplaintsController {
     } & {
         id: string;
     })[]>;
+    getMlaComplaints(req: any): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
+    getAdminComplaints(): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
     getAll(): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -27,7 +48,13 @@ export declare class ComplaintsController {
     } & {
         id: string;
     })[]>;
-    getPublicComplaints(): Promise<Complaint[]>;
+    getByCitizen(citizenId: string): Promise<(import("mongoose").Document<unknown, {}, Complaint, {}, import("mongoose").DefaultSchemaOptions> & Complaint & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
     likeComplaint(id: string, userId: string): Promise<{
         success: boolean;
         message: string;
@@ -40,17 +67,12 @@ export declare class ComplaintsController {
         reposts: number;
         repostedBy: import("mongoose").Types.ObjectId[];
     }>;
-    getStats(): Promise<{
-        totalComplaints: number;
-        resolvedComplaints: number;
-        inProgressComplaints: number;
-        avgResponse: string | number;
-    }>;
     updateStatus(id: string, body: any): Promise<Complaint | null>;
     addComment(id: string, body: CreateCommentDto): Promise<{
         userId: import("mongoose").Types.ObjectId;
         username: string;
         role: string;
+        from: string;
         text: string;
         date: Date;
     }>;

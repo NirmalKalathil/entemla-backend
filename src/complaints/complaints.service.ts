@@ -32,7 +32,7 @@ export class ComplaintsService {
     const newComplaint = new this.complaintModel({
       ...createComplaintDto,
       citizenId: citizen._id,
-      constituencyId: citizen.constituencyId, // ✅ trusted source
+      constituencyId: citizen.constituencyId.toLowerCase().trim(), // ✅ trusted source
     });
 
     return await newComplaint.save();
@@ -47,6 +47,7 @@ export class ComplaintsService {
       userId: new Types.ObjectId(body.userId),
       username: body.username,
       role: body.role,
+      from: body.role || 'Citizen',
       text: body.text,
       date: new Date(),
     };
@@ -56,8 +57,11 @@ export class ComplaintsService {
   }
 
   async findByCitizen(citizenId: string) {
+    // Convert string to ObjectId
+    const id = new Types.ObjectId(citizenId);
+
     return this.complaintModel
-      .find({ citizenId })
+      .find({ citizenId: id }) // Match against the ObjectId
       .populate('citizenId', 'name email')
       .exec();
   }
@@ -254,12 +258,41 @@ export class ComplaintsService {
       throw new Error("Invalid JWT user payload");
     }
 
-    if (user.role === 'admin') {
-      return this.complaintModel.find().populate('citizenId');
+    switch (user.role) {
+      case "admin":
+        return this.getAllComplaints();
+
+      case "mla":
+        return this.getComplaintsByConstituency(user.constituencyId);
+
+      case "employee":
+        return this.getComplaintsByConstituency(user.constituencyId);
+
+      default:
+        return this.getPublicComplaints();
     }
+  }
+  async getAllComplaints() {
+    return this.complaintModel.find().populate("citizenId", "name");
+  }
+
+  async getComplaintsByConstituency(constituencyId: string) {
+    return this.complaintModel
+      .find({ constituencyId: constituencyId?.toLowerCase().trim() })
+      .populate("citizenId", "name");
+  }
+
+
+  async getForMla(user: any) {
+    const constituency = (user.constituencyId || "")
+      .toString()
+      .trim()
+      .toLowerCase();
 
     return this.complaintModel.find({
-      constituencyId: user.constituencyId,
-    });
+      constituencyId: {
+        $regex: new RegExp(`^${constituency}$`, "i")
+      }
+    }).populate("citizenId", "name");
   }
 }

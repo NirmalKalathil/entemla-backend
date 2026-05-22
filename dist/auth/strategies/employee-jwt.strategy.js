@@ -9,11 +9,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtStrategy = void 0;
+exports.EmployeeJwtStrategy = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const passport_jwt_1 = require("passport-jwt");
-let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
+let EmployeeJwtStrategy = class EmployeeJwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'employee-jwt') {
     constructor() {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,7 +23,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
     }
     async validate(payload) {
         return {
-            id: payload.sub,
+            id: payload.id,
             role: payload.role,
             constituencyId: payload.constituencyId,
             employeeId: payload.employeeId,
@@ -31,9 +31,9 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         };
     }
 };
-exports.JwtStrategy = JwtStrategy;
-exports.JwtStrategy = JwtStrategy = __decorate([
+exports.EmployeeJwtStrategy = EmployeeJwtStrategy;
+exports.EmployeeJwtStrategy = EmployeeJwtStrategy = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [])
-], JwtStrategy);
-//# sourceMappingURL=jwt.strategy.js.map
+], EmployeeJwtStrategy);
+//# sourceMappingURL=employee-jwt.strategy.js.map

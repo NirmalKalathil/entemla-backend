@@ -13,15 +13,20 @@ const user_schema_1 = require("./schemas/user.schema");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const jwt_module_1 = require("./jwt.module");
+const jwt_strategy_1 = require("../admin/jwt.strategy");
+const passport_1 = require("@nestjs/passport");
+const employee_jwt_strategy_1 = require("./strategies/employee-jwt.strategy");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }]),
-            jwt_module_1.JwtConfigModule,],
+            jwt_module_1.JwtConfigModule,
+            passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService]
+        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, employee_jwt_strategy_1.EmployeeJwtStrategy],
+        exports: [passport_1.PassportModule, jwt_strategy_1.JwtStrategy, employee_jwt_strategy_1.EmployeeJwtStrategy],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

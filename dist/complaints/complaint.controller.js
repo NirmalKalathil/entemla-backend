@@ -18,6 +18,7 @@ const complaints_service_1 = require("./complaints.service");
 const create_comment_dto_1 = require("./dto/create-comment.dto");
 const complaint_dto_1 = require("./dto/complaint.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const employee_jwt_guard_1 = require("../auth/guards/employee-jwt.guard");
 let ComplaintsController = class ComplaintsController {
     constructor(complaintsService) {
         this.complaintsService = complaintsService;
@@ -25,26 +26,38 @@ let ComplaintsController = class ComplaintsController {
     async create(dto) {
         return this.complaintsService.create(dto);
     }
-    async getByCitizen(citizenId) {
-        return await this.complaintsService.findByCitizen(citizenId);
+    async getPublicComplaints() {
+        return await this.complaintsService.getPublicComplaints();
+    }
+    async getStats() {
+        return await this.complaintsService.getComplaintStats();
+    }
+    async getMyComplaints(req) {
+        const userId = req.user.id || req.user.sub;
+        console.log("Searching for Citizen ID:", userId);
+        return this.complaintsService.findByCitizen(userId);
     }
     getEmployeeComplaints(req) {
-        return this.complaintsService.getComplaintsForUser(req.user);
+        console.log('--- EMPLOYEE STRATEGY ACTIVE ---', req.user);
+        return this.complaintsService.getComplaintsByConstituency(req.user?.constituencyId || '');
+    }
+    getMlaComplaints(req) {
+        return this.complaintsService.getComplaintsByConstituency(req.user?.constituencyId || '');
+    }
+    getAdminComplaints() {
+        return this.complaintsService.getAllComplaints();
     }
     async getAll() {
         return await this.complaintsService.findAll();
     }
-    async getPublicComplaints() {
-        return await this.complaintsService.getPublicComplaints();
+    async getByCitizen(citizenId) {
+        return await this.complaintsService.findByCitizen(citizenId);
     }
     async likeComplaint(id, userId) {
         return this.complaintsService.likeComplaint(id, userId);
     }
     async repostComplaint(id, userId) {
         return this.complaintsService.repostComplaint(id, userId);
-    }
-    async getStats() {
-        return await this.complaintsService.getComplaintStats();
     }
     updateStatus(id, body) {
         return this.complaintsService.updateStatus(id, body.status, body.comment);
@@ -68,14 +81,27 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)('citizen/:citizenId'),
-    __param(0, (0, common_1.Param)('citizenId')),
+    (0, common_1.Get)('public'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], ComplaintsController.prototype, "getByCitizen", null);
+], ComplaintsController.prototype, "getPublicComplaints", null);
+__decorate([
+    (0, common_1.Get)('stats'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ComplaintsController.prototype, "getStats", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('my-complaints'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ComplaintsController.prototype, "getMyComplaints", null);
+__decorate([
+    (0, common_1.UseGuards)(employee_jwt_guard_1.EmployeeJwtGuard),
     (0, common_1.Get)('employee'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -83,17 +109,34 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ComplaintsController.prototype, "getEmployeeComplaints", null);
 __decorate([
+    (0, common_1.UseGuards)(employee_jwt_guard_1.EmployeeJwtGuard),
+    (0, common_1.Get)('mla'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ComplaintsController.prototype, "getMlaComplaints", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('admin'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ComplaintsController.prototype, "getAdminComplaints", null);
+__decorate([
+    (0, common_1.UseGuards)(employee_jwt_guard_1.EmployeeJwtGuard),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "getAll", null);
 __decorate([
-    (0, common_1.Get)('public'),
+    (0, common_1.Get)('citizen/:citizenId'),
+    __param(0, (0, common_1.Param)('citizenId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ComplaintsController.prototype, "getPublicComplaints", null);
+], ComplaintsController.prototype, "getByCitizen", null);
 __decorate([
     (0, common_1.Patch)(':id/like'),
     __param(0, (0, common_1.Param)('id')),
@@ -110,12 +153,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], ComplaintsController.prototype, "repostComplaint", null);
-__decorate([
-    (0, common_1.Get)('stats'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ComplaintsController.prototype, "getStats", null);
 __decorate([
     (0, common_1.Patch)(':id/status'),
     __param(0, (0, common_1.Param)('id')),

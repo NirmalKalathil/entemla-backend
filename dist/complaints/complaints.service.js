@@ -34,7 +34,7 @@ let ComplaintsService = class ComplaintsService {
         const newComplaint = new this.complaintModel({
             ...createComplaintDto,
             citizenId: citizen._id,
-            constituencyId: citizen.constituencyId,
+            constituencyId: citizen.constituencyId.toLowerCase().trim(),
         });
         return await newComplaint.save();
     }
@@ -47,6 +47,7 @@ let ComplaintsService = class ComplaintsService {
             userId: new mongoose_2.Types.ObjectId(body.userId),
             username: body.username,
             role: body.role,
+            from: body.role || 'Citizen',
             text: body.text,
             date: new Date(),
         };
@@ -55,8 +56,9 @@ let ComplaintsService = class ComplaintsService {
         return newComment;
     }
     async findByCitizen(citizenId) {
+        const id = new mongoose_2.Types.ObjectId(citizenId);
         return this.complaintModel
-            .find({ citizenId })
+            .find({ citizenId: id })
             .populate('citizenId', 'name email')
             .exec();
     }
@@ -184,12 +186,35 @@ let ComplaintsService = class ComplaintsService {
         if (!user?.role) {
             throw new Error("Invalid JWT user payload");
         }
-        if (user.role === 'admin') {
-            return this.complaintModel.find().populate('citizenId');
+        switch (user.role) {
+            case "admin":
+                return this.getAllComplaints();
+            case "mla":
+                return this.getComplaintsByConstituency(user.constituencyId);
+            case "employee":
+                return this.getComplaintsByConstituency(user.constituencyId);
+            default:
+                return this.getPublicComplaints();
         }
+    }
+    async getAllComplaints() {
+        return this.complaintModel.find().populate("citizenId", "name");
+    }
+    async getComplaintsByConstituency(constituencyId) {
+        return this.complaintModel
+            .find({ constituencyId: constituencyId?.toLowerCase().trim() })
+            .populate("citizenId", "name");
+    }
+    async getForMla(user) {
+        const constituency = (user.constituencyId || "")
+            .toString()
+            .trim()
+            .toLowerCase();
         return this.complaintModel.find({
-            constituencyId: user.constituencyId,
-        });
+            constituencyId: {
+                $regex: new RegExp(`^${constituency}$`, "i")
+            }
+        }).populate("citizenId", "name");
     }
 };
 exports.ComplaintsService = ComplaintsService;
