@@ -15,12 +15,6 @@ export declare class KbService implements OnModuleInit {
     clearKnowledgeBase(): Promise<void>;
     getStats(): Promise<{
         totalDocuments: number;
-        lastUpdated: (import("mongoose").Document<unknown, {}, KnowledgeBase, {}, import("mongoose").DefaultSchemaOptions> & KnowledgeBase & Required<{
-            _id: import("mongoose").Types.ObjectId;
-        }> & {
-            __v: number;
-        } & {
-            id: string;
-        }) | null;
+        lastUpdated: any;
     }>;
 }

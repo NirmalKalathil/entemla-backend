@@ -48,6 +48,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 var KbService_1;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KbService = void 0;
 const common_1 = require("@nestjs/common");
@@ -190,7 +191,6 @@ exports.KbService = KbService = KbService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('KnowledgeBase')),
     __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => rag_service_1.RagService))),
-    __metadata("design:paramtypes", [mongoose_2.Model,
-        rag_service_1.RagService])
+    __metadata("design:paramtypes", [mongoose_2.Model, typeof (_a = typeof rag_service_1.RagService !== "undefined" && rag_service_1.RagService) === "function" ? _a : Object])
 ], KbService);
 //# sourceMappingURL=kb.service.js.map
