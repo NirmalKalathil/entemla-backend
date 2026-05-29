@@ -186,7 +186,7 @@ if (['character certificate', 'caste certificate', 'income certificate', 'certif
         ? 'അതെ, വ്യാജ അക്കൗണ്ടുകൾ തടയുന്നതിനായി OTP വെരിഫിക്കേഷൻ നിർബന്ധമാണ്. രജിസ്റ്റർ ചെയ്യാതെ നിങ്ങൾക്ക് വെബ്‌സൈറ്റ് ബ്രൗസ് ചെയ്യാം, എന്നാൽ പരാതി സമർപ്പിക്കാൻ രജിസ്ട്രേഷൻ വേണം.'
         : 'Yes, OTP verification is mandatory to prevent fake accounts. You can browse the website without registering, but submitting a complaint requires registration.';
     }
-    if (['otp not','receive an otp','receive a otp','otp varunnilla', 'ഒടിപി', 'otp വരുന്നില്ല'].some(w => q.includes(w))) {return lang === 'Malayalam'
+    if (['otp not','otp is not','receive an otp','receive a otp','otp varunnilla', 'ഒടിപി', 'otp വരുന്നില്ല'].some(w => q.includes(w))) {return lang === 'Malayalam'
         ? 'മൊബൈൽ നെറ്റ്‌വർക്ക് പരിധിയിൽ ആണെന്ന് ഉറപ്പാക്കുക. 2 മിനിറ്റ് കാത്തിരുന്ന ശേഷം "Resend OTP" ബട്ടൺ ക്ലിക്ക് ചെയ്യുക. പ്രശ്നം തുടരുകയാണെങ്കിൽ നിങ്ങളുടെ SMS ഇൻബോക്സ് ഫുൾ ആണോ എന്ന് നോക്കുക.'
         : 'Make sure your mobile has network coverage. Wait 2 minutes then tap "Resend OTP". If the problem continues, check if your SMS inbox is full.';
     }
@@ -376,68 +376,153 @@ if (['character certificate', 'caste certificate', 'income certificate', 'certif
         ? 'MLA-യുടെ കാലാവധി അവസാനിക്കുകയോ പുതിയ MLA അധികാരമേൽക്കുകയോ ചെയ്‌താൽ Pending/In Progress പരാതികൾ ഓഫീസ് ടീം തുടർ നടപടി ഉറപ്പ് വരുത്തുന്നതാണ്.'
         : 'If the MLA\'s term ends or a new MLA takes charge, the office team ensures that existing Pending or In Progress complaints continue to be followed up and resolved.';
     }
-    if (['who is my mla', 'contact mla', 'mla number', 'ഫോൺ നമ്പർ'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'ദയവായി നിങ്ങളുടെ മണ്ഡലത്തിന്റെ പേര് പറയാമോ?'
-        : 'Could you please share your constituency name?';
-    }
-    if (['which department', 'what complaints', 'ഏത് വകുപ്പ്', 'എന്ത് പരാതി'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'നിങ്ങളുടെ പരാതിക്ക് അനുയോജ്യമായ വകുപ്പ് (PWD, KWA, KSEB) ലിസ്റ്റിൽ നിന്ന് കാറ്റഗറി തിരഞ്ഞെടുക്കുക.'
-        : 'Select the appropriate department category (PWD, KWA, KSEB, etc.) from the dropdown list when submitting your complaint.';
-    }
-    if (['how many mla', 'total mla', 'kerala mla', 'എത്ര mla', 'mla എത്ര'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'കേരള നിയമസഭയിൽ ആകെ 140 MLA-കൾ ഉണ്ട്. ഓരോ നിയമസഭാ മണ്ഡലത്തിലും ഒരു MLA ഉണ്ടായിരിക്കും.'
-        : 'Kerala Legislative Assembly has a total of 140 MLAs, one representing each Assembly Constituency.';
-    }
-    if (['how many constituency', 'total constituency', 'constituencies', 'മണ്ഡലങ്ങൾ', 'എത്ര മണ്ഡലം'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'കേരളത്തിൽ ആകെ 140 നിയമസഭാ മണ്ഡലങ്ങൾ ഉണ്ട്.': 'There are a total of 140 Assembly Constituencies in Kerala.';
-    }
-    if (['how many district', 'total district', 'districts', 'ജില്ലകൾ', 'എത്ര ജില്ല'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'കേരളത്തിൽ ആകെ 14 ജില്ലകളാണുള്ളത്.': 'There are a total of 14 administrative districts in Kerala.';
-    }
-    if (['my constituency', 'which constituency', 'find constituency', 'ഏത് മണ്ഡലം', 'എന്റെ മണ്ഡലം'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'നിങ്ങളുടെ മണ്ഡലം കണ്ടെത്താൻ വോട്ടർ ID കാർഡ് നോക്കുക അല്ലെങ്കിൽ Kerala Election Commission വെബ്സൈറ്റ് സന്ദർശിക്കുക.'
-        : 'To find your constituency, check your Voter ID card or visit the Kerala Election Commission website.';
-    }
-    if (['office hour', 'office time', 'timing', 'ഓഫീസ് സമയം', 'എപ്പോൾ'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'ഓഫീസ് സമയം: തിങ്കൾ മുതൽ ശനി വരെ, രാവിലെ 10:00 മുതൽ വൈകിട്ട് 5:00 വരെ.': 'Office hours: Monday to Saturday, 10:00 AM to 5:00 PM.';
-    }
-    if (['safe', 'privacy', 'secure', 'public', 'personal data', 'സുരക്ഷിതം', 'രഹസ്യം', 'സ്വകാര്യത'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'നിങ്ങളുടെ വിവരങ്ങൾ സുരക്ഷിതമാണ്. ഫോൺ നമ്പറോ വിലാസമോ പൊതുജനങ്ങൾക്ക് കാണാൻ കഴിയില്ല. MLA ഓഫീസിനും ബന്ധപ്പെട്ട ഉദ്യോഗസ്ഥർക്കും മാത്രമേ ഇത് പരിശോധിക്കാൻ അനുമതിയുള്ളൂ.'
-        : 'Your data is safe. Your phone number and address are not visible to the public. Only the MLA office and concerned officials have access to your personal details.';
-    }
-    if (['urgent', 'emergency', 'helpline', 'അടിയന്തിരം', 'ഹെൽപ്ലൈൻ'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'ശ്രദ്ധിക്കുക: EnteMLA അടിയന്തിര സഹായ പോർട്ടൽ അല്ല. അപകടങ്ങൾക്കും മെഡിക്കൽ എമർജൻസിക്കും ഔദ്യോഗിക ഹെൽപ്‌ലൈൻ 112 അല്ലെങ്കിൽ 101 ൽ ബന്ധപ്പെടുക.'
-        : 'Note: EnteMLA is not an emergency portal. For accidents or medical emergencies, please contact the official helpline at 112 or 101 immediately.';
-    }
-    if (['helpdesk', 'support', 'contact entemla', 'help desk', 'contact support', 'contact helpdesk', 'ഹെൽപ്ഡെസ്ക്', 'സഹായം', 'ഹെൽപ്ഡെസ്ക് നമ്പർ'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'സഹായത്തിന് "Contact Us" പേജ് സന്ദർശിക്കുക അല്ലെങ്കിൽ MLA ഓഫീസ് നേരിട്ട് ബന്ധപ്പെടുക.\nഓഫീസ് സമയം: തിങ്കൾ – ശനി, 10:00 AM – 5:00 PM.'
-        : 'For support, visit the "Contact Us" page or contact the MLA office directly.\nOffice hours: Monday – Saturday, 10:00 AM – 5:00 PM.';
-    }
-    if (['not loading', 'slow', 'browser', 'ലോഡ് ആകുന്നില്ല', 'സ്ലോ'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'ബ്രൗസർ Cache ക്ലിയർ ചെയ്യുക അല്ലെങ്കിൽ Chrome, Firefox-ന്റെ പുതിയ പതിപ്പ് ഉപയോഗിക്കുക. പ്രശ്നം തുടരുകയാണെങ്കിൽ സെർവർ അപ്ഡേറ്റ് കൊണ്ടാകാം, അൽപ്പ സമയം കഴിഞ്ഞ് ശ്രമിക്കുക.'
-        : 'Clear your browser cache or try using an updated version of Chrome or Firefox. If the issue continues, it may be due to a server update — please try again after a few minutes.';
-    }
-    if (['upload fail', 'file fail', 'അപ്‌ലോഡ്'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'ഫയൽ അപ്‌ലോഡ് പരാജയപ്പെട്ടാൽ ഫയൽ 5MB-യിൽ താഴെ ആണെന്നും PDF, JPG, PNG ഫോർമാറ്റ് ആണെന്നും ഉറപ്പാക്കുക.'
-        : 'If upload fails, make sure your file is below 5MB and is in PDF, JPG, or PNG format.';
-    }
-    const noiseWords = new Set(['who', 'what', 'is', 'the', 'of', 'are', 'tell', 'me', 'give', 'mla','constituency', 'about', 'phone', 'number', 'contact', 'in', 'for', 'a',
-    ]);
-    const words = q.split(/\s+/).filter(w => w.length > 2 && !noiseWords.has(w));
-    const matched = this.mlas.find(m => {const content = m.content.toLowerCase();const source = m.source.toLowerCase();
-      return words.some(word => content.includes(word) || source.includes(word));
-    });
-    if (matched) {return lang === 'Malayalam'? `വിവരം:\n${matched.content}`: matched.content;}
-    const isFilingAction = q.includes('file a complaint') || q.includes('submit a complaint') || q.includes('register a complaint') || q.includes('new') || q.includes('raise');
-    const hasMalayalamComplaint = q.includes('പരാതി നൽകാൻ');
-    if ((isFilingAction) || q.includes('grievance') || hasMalayalamComplaint) {return lang === 'Malayalam'
-        ? 'പരാതി നൽകാൻ:\n• EnteMLA-ൽ ലോഗിൻ ചെയ്യുക\n• "New Grievance" ക്ലിക്ക് ചെയ്യുക\n• വിവരങ്ങൾ നൽകുക\n• Submit ക്ലിക്ക് ചെയ്യുക\n\nTraking ID ലഭിക്കും.'
-        : 'To file a complaint:\n• Login to EnteMLA\n• Click "New Grievance"\n• Fill in the details\n• Click Submit\n\nYou will receive a Tracking ID.';
-    }
-    if (['track', 'status', 'tracking', 'ട്രാക്ക്', 'സ്ഥിതി'].some(w => q.includes(w))) {return lang === 'Malayalam'
-        ? 'Tracking ID ഉപയോഗിച്ച് പരാതിയുടെ സ്ഥിതി അറിയാം.\n\n• Pending — പരിശോധന തുടങ്ങിയിട്ടില്ല\n• In Progress — പരിശോധിക്കുന്നു\n• Resolved — നടപടി എടുത്തു'
-        : 'Use the Tracking ID to check complaint status.\n\n• Pending — Awaiting review\n• In Progress — Being reviewed\n• Resolved — Action taken';
-    }
+    // ── Master District Data ──────────────────────────────────────────────────────
+
+const DISTRICTS: Record<string, { en: string[]; ml: string[]; keywords: string[] }> = {
+  kasaragod:          { en: ['Manjeshwaram','Kasaragod','Udma','Kanhangad','Thrikaripur'], ml: ['മഞ്ചേശ്വരം','കാസർഗോഡ്','ഉദുമ','കാഞ്ഞങ്ങാട്','തൃക്കരിപ്പൂർ'], keywords: ['kasaragod','കാസർഗോഡ്'] },
+  kannur:             { en: ['Payyanur','Kalliasseri','Taliparamba','Irikkur','Azhikode','Kannur','Dharmadom','Thalassery','Kuthuparamba','Mattanur','Peravoor'], ml: ['പയ്യന്നൂർ','കല്ല്യാശ്ശേരി','തലിപ്പറമ്പ','ഇരിക്കൂർ','അഴീക്കോട്','കണ്ണൂർ','ധർമ്മടം','തലശ്ശേരി','കൂത്തുപറമ്പ','മട്ടന്നൂർ','പേരാവൂർ'], keywords: ['kannur','cannanore','കണ്ണൂർ'] },
+  wayanad:            { en: ['Mananthavady','Sulthan Bathery','Kalpetta'], ml: ['മാനന്തവാടി','സുൽത്താൻ ബത്തേരി','കൽപ്പറ്റ'], keywords: ['wayanad','വയനാട്'] },
+  kozhikode:          { en: ['Vatakara','Kuttiady','Nadapuram','Koyilandy','Perambra','Balussery','Elathur','Kozhikode North','Kozhikode South','Beypore','Kunnamangalam','Koduvally','Thiruvambady'], ml: ['വടകര','കുറ്റ്യാടി','നടാപ്പുറം','കൊയിലാണ്ടി','പേരമ്പ്ര','ബാലുശ്ശേരി','ഏലത്തൂർ','കോഴിക്കോട് നോർത്ത്','കോഴിക്കോട് സൗത്ത്','ബേപ്പൂർ','കുന്നമംഗലം','കോടുവള്ളി','തിരുവമ്പാടി'], keywords: ['kozhikode','calicut','കോഴിക്കോട്'] },
+  malappuram:         { en: ['Kondotty','Eranad','Nilambur','Wandoor','Manjeri','Perinthalmanna','Mankada','Malappuram','Vengara','Vallikkunnu','Tirurangadi','Tanur','Tirur','Kottakkal','Thavanur','Ponnani'], ml: ['കൊണ്ടോട്ടി','എറനാട്','നിലമ്പൂർ','വണ്ടൂർ','മഞ്ചേരി','പെരിന്തൽമണ്ണ','മങ്കട','മലപ്പുറം','വേങ്ങര','വളളിക്കുന്നു','തിരൂരങ്ങാടി','തനൂർ','തിരൂർ','കൊട്ടക്കൽ','താവനൂർ','പൊന്നാനി'], keywords: ['malappuram','മലപ്പുറം'] },
+  palakkad:           { en: ['Thrithala','Pattambi','Shornur','Ottapalam','Kongad','Mannarkkad','Malampuzha','Palakkad','Tarur','Chittur','Nenmara','Alathur'], ml: ['തൃത്താല','പട്ടാമ്പി','ഷൊർണൂർ','ഒറ്റപ്പാലം','കൊങ്ങാട്','മണ്ണാർക്കാട്','മലമ്പുഴ','പാലക്കാട്','തരൂർ','ചിറ്റൂർ','നെന്മാറ','അലത്തൂർ'], keywords: ['palakkad','palghat','പാലക്കാട്'] },
+  thrissur:           { en: ['Chelakkara','Kunnamkulam','Guruvayur','Manalur','Wadakkanchery','Ollur','Thrissur','Nattika','Kaipamangalam','Irinjalakuda','Puthukkad','Chalakudy','Kodungallur'], ml: ['ചേലക്കര','കുന്നംകുളം','ഗുരുവായൂർ','മണലൂർ','വടക്കാഞ്ചേരി','ഒല്ലൂർ','തൃശൂർ','നാട്ടിക','കൈപ്പമംഗലം','ഇരിഞ്ഞാലക്കുട','പുതുക്കാട്','ചാലക്കുടി','കൊടുങ്ങല്ലൂർ'], keywords: ['thrissur','trichur','തൃശൂർ'] },
+  ernakulam:          { en: ['Perumbavoor','Angamaly','Aluva','Kalamassery','Paravur','Vypin','Kochi','Thrippunithura','Ernakulam','Thrikkakara','Kunnathunad'], ml: ['പെരുമ്പാവൂർ','അങ്കമാലി','ആലുവ','കളമശ്ശേരി','പാറവൂർ','വൈപ്പിൻ','കൊച്ചി','തൃപ്പൂണിത്തുറ','എറണാകുളം','തൃക്കാക്കര','കുന്നതുനാട്'], keywords: ['ernakulam','kochi','cochin','എറണാകുളം'] },
+  idukki:             { en: ['Devikulam','Udumbanchola','Thodupuzha','Idukki','Peerumade','Piravom','Muvattupuzha','Kothamangalam'], ml: ['ദേവികുളം','ഉടുമ്പൻചോല','തൊടുപുഴ','ഇടുക്കി','പീരുമേട്','പിറവം','മൂവാറ്റുപുഴ','കോതമംഗലം'], keywords: ['idukki','ഇടുക്കി'] },
+  kottayam:           { en: ['Pala','Kaduthuruthy','Vaikom','Ettumanoor','Kottayam','Puthuppally','Changanassery','Kanjirappally','Poonjar'], ml: ['പാല','കടുത്തുരുത്തി','വൈക്കം','എട്ടുമാനൂർ','കോട്ടയം','പുത്തുപ്പള്ളി','ചങ്ങനാശ്ശേരി','കാഞ്ഞിരപ്പള്ളി','പൂഞ്ഞാർ'], keywords: ['kottayam','കോട്ടയം'] },
+  alappuzha:          { en: ['Aroor','Cherthala','Alappuzha','Ambalappuzha','Kuttanad','Haripad','Kayamkulam','Mavelikara','Chengannur'], ml: ['അരൂർ','ചേർത്തല','ആലപ്പുഴ','അമ്പലപ്പുഴ','കുട്ടനാട്','ഹരിപ്പാട്','കായംകുളം','മാവേലിക്കര','ചെങ്ങന്നൂർ'], keywords: ['alappuzha','alleppey','ആലപ്പുഴ'] },
+  pathanamthitta:     { en: ['Thiruvalla','Ranni','Aranmula','Konni','Adoor'], ml: ['തിരുവല്ല','റാന്നി','ആറന്മുള','കൊന്നി','ആടൂർ'], keywords: ['pathanamthitta','പത്തനംതിട്ട'] },
+  kollam:             { en: ['Karunagapally','Chavara','Kunnathur','Kottarakkara','Pathanapuram','Punalur','Chadayamangalam','Kundara','Kollam','Eravipuram','Chathannoor'], ml: ['കരുനാഗപ്പള്ളി','ചവറ','കുന്നത്തൂർ','കൊട്ടാരക്കര','പതനാപ്പുരം','പുനലൂർ','ചടയമംഗലം','കുണ്ടറ','കൊല്ലം','എരവിപുരം','ചതന്നൂർ'], keywords: ['kollam','quilon','കൊല്ലം'] },
+  thiruvananthapuram: { en: ['Varkala','Attingal','Chirayinkeezhu','Nedumangad','Vamanapuram','Kazhakkoottam','Vattiyoorkavu','Thiruvananthapuram','Nemom','Aruvikkara','Parassala','Kattakkada','Kovalam','Neyyattinkara'], ml: ['വർക്കല','അറ്റിങ്ങൽ','ചിറയിൻകീഴ്','നെടുമങ്ങാട്','വാമനപുരം','കഴക്കൂട്ടം','വട്ടിയൂർക്കാവ്','തിരുവനന്തപുരം','നേമം','അരുവിക്കര','പാറശ്ശാല','കട്ടക്കട','കോവളം','നെയ്യാറ്റിൻകര'], keywords: ['thiruvananthapuram','trivandrum','തിരുവനന്തപുരം'] },
+};
+
+function findDistrict(q: string): string | null {
+  for (const [district, data] of Object.entries(DISTRICTS)) {
+    if (data.keywords.some(k => q.includes(k))) return district;
+  }
+  return null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ALL if-else if BLOCKS — ORDER MATTERS: specific → broad
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (['who is my mla', 'contact mla', 'mla number', 'ഫോൺ നമ്പർ'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'ദയവായി നിങ്ങളുടെ മണ്ഡലത്തിന്റെ പേര് പറയാമോ?'
+    : 'Could you please share your constituency name?';
+
+} else if (['how many mla', 'total mla', 'kerala mla', 'എത്ര mla', 'mla എത്ര'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'കേരള നിയമസഭയിൽ ആകെ 140 MLA-കൾ ഉണ്ട്. ഓരോ നിയമസഭാ മണ്ഡലത്തിലും ഒരു MLA ഉണ്ടായിരിക്കും.'
+    : 'Kerala Legislative Assembly has a total of 140 MLAs, one representing each Assembly Constituency.';
+
+} else if (['how many district', 'total district', 'districts in kerala', 'എത്ര ജില്ല', 'ജില്ലകൾ'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'കേരളത്തിൽ ആകെ 14 ജില്ലകളാണുള്ളത്.'
+    : 'There are a total of 14 administrative districts in Kerala.';
+
+} else if (['how many constituencies', 'how many seats', 'how many assembly', 'how many mandalam',
+            'എത്ര മണ്ഡലം', 'എത്ര സീറ്റ്', 'എത്ര നിയമസഭ'].some(w => q.includes(w))) {
+  const district = findDistrict(q);
+  if (district) {
+    const data = DISTRICTS[district];
+    const name = district.charAt(0).toUpperCase() + district.slice(1);
+    return lang === 'Malayalam'
+      ? `${name} ജില്ലയിൽ ${data.ml.length} നിയമസഭാ മണ്ഡലങ്ങൾ ഉണ്ട്:\n${data.ml.join(', ')}`
+      : `${name} district has ${data.en.length} assembly constituencies:\n${data.en.join(', ')}`;
+  }
+  // No district found — general count
+  return lang === 'Malayalam'
+    ? 'കേരളത്തിൽ ആകെ 140 നിയമസഭാ മണ്ഡലങ്ങൾ ഉണ്ട്.'
+    : 'Kerala has a total of 140 assembly constituencies.';
+
+} else if (['constituencies in', 'seats in', 'assembly in', 'mandalam in',
+            'മണ്ഡലങ്ങൾ', 'സീറ്റുകൾ'].some(w => q.includes(w))) {
+  const district = findDistrict(q);
+  if (district) {
+    const data = DISTRICTS[district];
+    const name = district.charAt(0).toUpperCase() + district.slice(1);
+    return lang === 'Malayalam'
+      ? `${name} ജില്ലയിലെ നിയമസഭാ മണ്ഡലങ്ങൾ (${data.ml.length}):\n${data.ml.join(', ')}`
+      : `Assembly constituencies in ${name} district (${data.en.length}):\n${data.en.join(', ')}`;
+  }
+
+} else if (['all constituencies', 'list of constituencies', 'kerala constituencies', 'all assembly',
+            'list constituency', 'all constituency',
+            'എല്ലാ മണ്ഡലങ്ങൾ', 'മണ്ഡലങ്ങളുടെ പട്ടിക', 'കേരള മണ്ഡലം'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? `കേരളത്തിൽ ആകെ 140 നിയമസഭാ മണ്ഡലങ്ങൾ ഉണ്ട്:\n\n` +
+      Object.entries(DISTRICTS).map(([d, v]) =>
+        `${d.charAt(0).toUpperCase() + d.slice(1)}: ${v.ml.join(', ')}`).join('\n')
+    : `Kerala has 140 Assembly constituencies across 14 districts:\n\n` +
+      Object.entries(DISTRICTS).map(([d, v]) =>
+        `${d.charAt(0).toUpperCase() + d.slice(1)} (${v.en.length}): ${v.en.join(', ')}`).join('\n');
+
+} else if (['my constituency', 'which constituency', 'find constituency', 'ഏത് മണ്ഡലം', 'എന്റെ മണ്ഡലം'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'നിങ്ങളുടെ മണ്ഡലം കണ്ടെത്താൻ വോട്ടർ ID കാർഡ് നോക്കുക അല്ലെങ്കിൽ Kerala Election Commission വെബ്സൈറ്റ് സന്ദർശിക്കുക.'
+    : 'To find your constituency, check your Voter ID card or visit the Kerala Election Commission website.';
+
+} else if (['which department', 'what complaints', 'ഏത് വകുപ്പ്', 'എന്ത് പരാതി'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'നിങ്ങളുടെ പരാതിക്ക് അനുയോജ്യമായ വകുപ്പ് (PWD, KWA, KSEB) ലിസ്റ്റിൽ നിന്ന് കാറ്റഗറി തിരഞ്ഞെടുക്കുക.'
+    : 'Select the appropriate department category (PWD, KWA, KSEB, etc.) from the dropdown list when submitting your complaint.';
+
+} else if (['office hour', 'office time', 'timing', 'ഓഫീസ് സമയം', 'എപ്പോൾ'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'ഓഫീസ് സമയം: തിങ്കൾ മുതൽ ശനി വരെ, രാവിലെ 10:00 മുതൽ വൈകിട്ട് 5:00 വരെ.'
+    : 'Office hours: Monday to Saturday, 10:00 AM to 5:00 PM.';
+
+} else if (['safe', 'privacy', 'secure', 'public', 'personal data', 'സുരക്ഷിതം', 'രഹസ്യം', 'സ്വകാര്യത'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'നിങ്ങളുടെ വിവരങ്ങൾ സുരക്ഷിതമാണ്. ഫോൺ നമ്പറോ വിലാസമോ പൊതുജനങ്ങൾക്ക് കാണാൻ കഴിയില്ല. MLA ഓഫീസിനും ബന്ധപ്പെട്ട ഉദ്യോഗസ്ഥർക്കും മാത്രമേ ഇത് പരിശോധിക്കാൻ അനുമതിയുള്ളൂ.'
+    : 'Your data is safe. Your phone number and address are not visible to the public. Only the MLA office and concerned officials have access to your personal details.';
+
+} else if (['urgent', 'emergency', 'helpline', 'അടിയന്തിരം', 'ഹെൽപ്ലൈൻ'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'ശ്രദ്ധിക്കുക: EnteMLA അടിയന്തിര സഹായ പോർട്ടൽ അല്ല. അപകടങ്ങൾക്കും മെഡിക്കൽ എമർജൻസിക്കും ഔദ്യോഗിക ഹെൽപ്‌ലൈൻ 112 അല്ലെങ്കിൽ 101 ൽ ബന്ധപ്പെടുക.'
+    : 'Note: EnteMLA is not an emergency portal. For accidents or medical emergencies, please contact the official helpline at 112 or 101 immediately.';
+
+} else if (['helpdesk', 'support', 'contact entemla', 'help desk', 'contact support', 'contact helpdesk', 'ഹെൽപ്ഡെസ്ക്', 'സഹായം'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'സഹായത്തിന് "Contact Us" പേജ് സന്ദർശിക്കുക അല്ലെങ്കിൽ MLA ഓഫീസ് നേരിട്ട് ബന്ധപ്പെടുക.\nഓഫീസ് സമയം: തിങ്കൾ – ശനി, 10:00 AM – 5:00 PM.'
+    : 'For support, visit the "Contact Us" page or contact the MLA office directly.\nOffice hours: Monday – Saturday, 10:00 AM – 5:00 PM.';
+
+} else if (['not loading', 'slow', 'browser', 'ലോഡ് ആകുന്നില്ല', 'സ്ലോ'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'ബ്രൗസർ Cache ക്ലിയർ ചെയ്യുക അല്ലെങ്കിൽ Chrome, Firefox-ന്റെ പുതിയ പതിപ്പ് ഉപയോഗിക്കുക. പ്രശ്നം തുടരുകയാണെങ്കിൽ സെർവർ അപ്ഡേറ്റ് കൊണ്ടാകാം, അൽപ്പ സമയം കഴിഞ്ഞ് ശ്രമിക്കുക.'
+    : 'Clear your browser cache or try using an updated version of Chrome or Firefox. If the issue continues, it may be due to a server update — please try again after a few minutes.';
+
+} else if (['upload fail', 'file fail', 'അപ്‌ലോഡ്'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'ഫയൽ അപ്‌ലോഡ് പരാജയപ്പെട്ടാൽ ഫയൽ 5MB-യിൽ താഴെ ആണെന്നും PDF, JPG, PNG ഫോർമാറ്റ് ആണെന്നും ഉറപ്പാക്കുക.'
+    : 'If upload fails, make sure your file is below 5MB and is in PDF, JPG, or PNG format.';
+
+} else if (['track', 'status', 'tracking', 'ട്രാക്ക്', 'സ്ഥിതി'].some(w => q.includes(w))) {
+  return lang === 'Malayalam'
+    ? 'Tracking ID ഉപയോഗിച്ച് പരാതിയുടെ സ്ഥിതി അറിയാം.\n\n• Pending — പരിശോധന തുടങ്ങിയിട്ടില്ല\n• In Progress — പരിശോധിക്കുന്നു\n• Resolved — നടപടി എടുത്തു'
+    : 'Use the Tracking ID to check complaint status.\n\n• Pending — Awaiting review\n• In Progress — Being reviewed\n• Resolved — Action taken';
+
+} else if (q.includes('file a complaint') || q.includes('submit a complaint') || q.includes('register a complaint')
+        || q.includes('new') || q.includes('raise') || q.includes('grievance') || q.includes('പരാതി നൽകാൻ')) {
+  return lang === 'Malayalam'
+    ? 'പരാതി നൽകാൻ:\n• EnteMLA-ൽ ലോഗിൻ ചെയ്യുക\n• "New Grievance" ക്ലിക്ക് ചെയ്യുക\n• വിവരങ്ങൾ നൽകുക\n• Submit ക്ലിക്ക് ചെയ്യുക\n\nTraking ID ലഭിക്കും.'
+    : 'To file a complaint:\n• Login to EnteMLA\n• Click "New Grievance"\n• Fill in the details\n• Click Submit\n\nYou will receive a Tracking ID.';
+
+} else {
+  // ── MLA fuzzy lookup (fallback) ───────────────────────────────────────────
+  const noiseWords = new Set(['who','what','is','the','of','are','tell','me','give','mla',
+                               'constituency','about','phone','number','contact','in','for','a']);
+  const words = q.split(/\s+/).filter(w => w.length > 2 && !noiseWords.has(w));
+  const matched = this.mlas.find(m => {
+    const content = m.content.toLowerCase();
+    const source  = m.source.toLowerCase();
+    return words.some(word => content.includes(word) || source.includes(word));
+  });
+  if (matched) {
+    return lang === 'Malayalam' ? `വിവരം:\n${matched.content}` : matched.content;
+  }
+}
     if(['trust','useful','സുരക്ഷിത','ഉപയോഗ'].some(w => q.includes(w))) {return lang === 'Malayalam'
       ? 'EnteMLA സുരക്ഷിതവും ഉപയോഗപ്രദവുമായ പോർട്ടൽ ആണ്. നിങ്ങളുടെ ഫോണിൽ നിന്ന് തന്നെ, എപ്പോൾ വേണമെങ്കിലും, സൗജന്യമായി MLA-യ്ക്ക് നേരിട്ട് പരാതി നൽകാം.'
       : 'EnteMLA is a safe and useful portal. You can register complaints about civic issues directly to your MLA — anytime, for free, from your phone.'
