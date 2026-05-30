@@ -52,6 +52,18 @@ let AdminController = class AdminController {
     deleteEmployee(id) {
         return this.adminService.deleteEmployee(id);
     }
+    createCitizen(dto) {
+        return this.adminService.createCitizen(dto);
+    }
+    getCitizens() {
+        return this.adminService.getCitizens();
+    }
+    updateCitizen(id, dto) {
+        return this.adminService.updateCitizen(id, dto);
+    }
+    deleteCitizen(id) {
+        return this.adminService.deleteCitizen(id);
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -133,6 +145,42 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "deleteEmployee", null);
+__decorate([
+    (0, roles_decarators_1.Roles)("admin"),
+    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Post)("create-citizen"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "createCitizen", null);
+__decorate([
+    (0, roles_decarators_1.Roles)("admin"),
+    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Get)("citizens"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "getCitizens", null);
+__decorate([
+    (0, roles_decarators_1.Roles)("admin"),
+    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Patch)("citizen/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "updateCitizen", null);
+__decorate([
+    (0, roles_decarators_1.Roles)("admin"),
+    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Delete)("citizen/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "deleteCitizen", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)("admin"),
     __metadata("design:paramtypes", [admin_service_1.AdminService])

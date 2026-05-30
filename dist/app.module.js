@@ -16,6 +16,7 @@ const auth_module_1 = require("./auth/auth.module");
 const complaint_module_1 = require("./complaints/complaint.module");
 const users_module_1 = require("./users/users.module");
 const chat_module_1 = require("./chat/chat.module");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,6 +30,7 @@ exports.AppModule = AppModule = __decorate([
                     uri: config.get('MONGODB_URI'),
                 }),
             }),
+            admin_module_1.AdminModule,
             auth_module_1.AuthModule,
             complaint_module_1.ComplaintsModule,
             users_module_1.UsersModule,

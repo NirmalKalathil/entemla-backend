@@ -146,6 +146,40 @@ let AdminService = class AdminService {
     async deleteEmployee(id) {
         return this.userModel.findByIdAndDelete(id);
     }
+    async createCitizen(dto) {
+        const existing = await this.userModel.findOne({
+            email: dto.email,
+        });
+        if (existing) {
+            throw new common_1.BadRequestException("Citizen already exists");
+        }
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        const citizen = await this.userModel.create({
+            ...dto,
+            password: hashedPassword,
+            role: "citizen",
+            isActive: true,
+        });
+        return citizen;
+    }
+    async getCitizens() {
+        return this.userModel.find({
+            role: "citizen",
+        });
+    }
+    async updateCitizen(id, dto) {
+        const updateData = { ...dto };
+        if (dto.password) {
+            updateData.password = await bcrypt.hash(dto.password, 10);
+        }
+        else {
+            delete updateData.password;
+        }
+        return this.userModel.findByIdAndUpdate(id, updateData, { new: true });
+    }
+    async deleteCitizen(id) {
+        return this.userModel.findByIdAndDelete(id);
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

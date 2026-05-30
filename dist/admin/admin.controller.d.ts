@@ -68,4 +68,32 @@ export declare class AdminController {
     } & {
         id: string;
     }) | null>;
+    createCitizen(dto: any): Promise<import("mongoose").Document<unknown, {}, import("../auth/schemas/user.schema").User, {}, import("mongoose").DefaultSchemaOptions> & import("../auth/schemas/user.schema").User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }>;
+    getCitizens(): Promise<(import("mongoose").Document<unknown, {}, import("../auth/schemas/user.schema").User, {}, import("mongoose").DefaultSchemaOptions> & import("../auth/schemas/user.schema").User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    })[]>;
+    updateCitizen(id: string, dto: any): Promise<(import("mongoose").Document<unknown, {}, import("../auth/schemas/user.schema").User, {}, import("mongoose").DefaultSchemaOptions> & import("../auth/schemas/user.schema").User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }) | null>;
+    deleteCitizen(id: string): Promise<(import("mongoose").Document<unknown, {}, import("../auth/schemas/user.schema").User, {}, import("mongoose").DefaultSchemaOptions> & import("../auth/schemas/user.schema").User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    } & {
+        id: string;
+    }) | null>;
 }

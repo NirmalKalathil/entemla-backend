@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ComplaintsModule } from './complaints/complaint.module';
 import { UsersModule } from './users/users.module';
 import { ChatModule } from './chat/chat.module'; 
+import { Admin } from 'mongodb';
+import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -16,6 +18,7 @@ import { ChatModule } from './chat/chat.module';
         uri: config.get<string>('MONGODB_URI'),
       }),
     }),
+    AdminModule,
     AuthModule,
     ComplaintsModule,
     UsersModule,

@@ -78,4 +78,37 @@ export class AdminController {
   ) {
     return this.adminService.deleteEmployee(id);
   }
+
+  @Roles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post("create-citizen")
+  createCitizen(@Body() dto: any) {
+    return this.adminService.createCitizen(dto);
+  }
+
+  @Roles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get("citizens")
+  getCitizens() {
+    return this.adminService.getCitizens();
+  }
+
+  @Roles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch("citizen/:id")
+  updateCitizen(
+    @Param("id") id: string,
+    @Body() dto: any,
+  ) {
+    return this.adminService.updateCitizen(id, dto);
+  }
+
+  @Roles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete("citizen/:id")
+  deleteCitizen(
+    @Param("id") id: string,
+  ) {
+    return this.adminService.deleteCitizen(id);
+  }
 }
