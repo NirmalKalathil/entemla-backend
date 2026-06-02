@@ -19,6 +19,7 @@ const register_dto_1 = require("./dto/register.dto");
 const login_dto_1 = require("./dto/login.dto");
 const employee_login_dto_1 = require("./dto/employee_login.dto");
 const mla_login_dto_1 = require("./dto/mla_login.dto");
+const employee_jwt_guard_1 = require("./guards/employee-jwt.guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -34,6 +35,9 @@ let AuthController = class AuthController {
     }
     mlaLogin(dto) {
         return this.authService.mlaLogin(dto);
+    }
+    getMyMla(req) {
+        return this.authService.getMyMla(req.user.constituencyId);
     }
 };
 exports.AuthController = AuthController;
@@ -65,6 +69,14 @@ __decorate([
     __metadata("design:paramtypes", [mla_login_dto_1.MlaLoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "mlaLogin", null);
+__decorate([
+    (0, common_1.Get)('my-mla'),
+    (0, common_1.UseGuards)(employee_jwt_guard_1.EmployeeJwtGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getMyMla", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

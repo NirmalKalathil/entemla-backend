@@ -7,6 +7,7 @@ import { AdminLoginDto } from "./dto/admin-login.dto";
 import { JwtService } from "@nestjs/jwt";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { CreateMlaDto } from "./dto/create-mla.dto";
+import { MLA_MASTER_DATA } from "../constants/mlaMasteData";
 
 @Injectable()
 export class AdminService {
@@ -192,6 +193,12 @@ export class AdminService {
     return this.userModel.find({
       role: "citizen",
     });
+  }
+
+  async getMlaInfo(constituencyId: string) {
+    return MLA_MASTER_DATA[
+      constituencyId.toLowerCase()
+    ];
   }
   async updateCitizen(
     id: string,

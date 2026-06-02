@@ -48,6 +48,15 @@ export class AdminController {
 
   @Roles("admin")
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('mla-info/:constituencyId')
+  async getMlaInfo(
+    @Param('constituencyId') constituencyId: string,
+  ) {
+    return this.adminService.getMlaInfo(constituencyId);
+  }
+
+  @Roles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete("mla/:id")
   deleteMla(
     @Param("id") id: string

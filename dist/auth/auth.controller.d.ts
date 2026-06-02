@@ -48,4 +48,16 @@ export declare class AuthController {
         };
         token: string;
     }>;
+    getMyMla(req: any): Promise<{
+        _id: import("mongoose").Types.ObjectId;
+        name: string;
+        email: string;
+        phone: string;
+        district: string;
+        place: string;
+        constituencyId: string;
+        mlaId: string | undefined;
+        photo: string;
+        party: string;
+    }>;
 }

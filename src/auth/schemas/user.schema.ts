@@ -34,6 +34,12 @@ export class User extends Document {
   })
   role: string;
 
+  @Prop({ default: '' })
+  photo: string;
+
+  @Prop({ default: '' })
+  party: string;
+
   // 🏛️ MLA-specific ID
   @Prop({ unique: true, sparse: true })
   mlaId?: string;

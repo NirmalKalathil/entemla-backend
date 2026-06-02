@@ -40,6 +40,9 @@ let AdminController = class AdminController {
     updateMla(id, dto) {
         return this.adminService.updateMla(id, dto);
     }
+    async getMlaInfo(constituencyId) {
+        return this.adminService.getMlaInfo(constituencyId);
+    }
     deleteMla(id) {
         return this.adminService.deleteMla(id);
     }
@@ -109,6 +112,15 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "updateMla", null);
+__decorate([
+    (0, roles_decarators_1.Roles)("admin"),
+    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Get)('mla-info/:constituencyId'),
+    __param(0, (0, common_1.Param)('constituencyId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getMlaInfo", null);
 __decorate([
     (0, roles_decarators_1.Roles)("admin"),
     (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

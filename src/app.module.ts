@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { ChatModule } from './chat/chat.module'; 
 import { Admin } from 'mongodb';
 import { AdminModule } from './admin/admin.module';
+import { BannerModule } from './admin/banner/banner.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -22,7 +23,8 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     ComplaintsModule,
     UsersModule,
-    ChatModule, 
+    ChatModule,
+    BannerModule, 
   ],
   controllers: [AppController],
   providers: [AppService],

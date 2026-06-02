@@ -52,6 +52,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ default: '' }),
+    __metadata("design:type", String)
+], User.prototype, "photo", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: '' }),
+    __metadata("design:type", String)
+], User.prototype, "party", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ unique: true, sparse: true }),
     __metadata("design:type", String)
 ], User.prototype, "mlaId", void 0);

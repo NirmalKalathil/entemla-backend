@@ -51,4 +51,16 @@ export declare class AuthService {
         };
         token: string;
     }>;
+    getMyMla(constituencyId: string): Promise<{
+        _id: import("mongoose").Types.ObjectId;
+        name: string;
+        email: string;
+        phone: string;
+        district: string;
+        place: string;
+        constituencyId: string;
+        mlaId: string | undefined;
+        photo: string;
+        party: string;
+    }>;
 }

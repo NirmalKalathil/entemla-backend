@@ -87,6 +87,7 @@ export declare class AdminService {
     } & {
         id: string;
     })[]>;
+    getMlaInfo(constituencyId: string): Promise<any>;
     updateCitizen(id: string, dto: any): Promise<(import("mongoose").Document<unknown, {}, User, {}, import("mongoose").DefaultSchemaOptions> & User & Required<{
         _id: import("mongoose").Types.ObjectId;
     }> & {

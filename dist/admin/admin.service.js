@@ -52,6 +52,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../auth/schemas/user.schema");
 const jwt_1 = require("@nestjs/jwt");
+const mlaMasteData_1 = require("../constants/mlaMasteData");
 let AdminService = class AdminService {
     constructor(userModel, jwtService) {
         this.userModel = userModel;
@@ -166,6 +167,9 @@ let AdminService = class AdminService {
         return this.userModel.find({
             role: "citizen",
         });
+    }
+    async getMlaInfo(constituencyId) {
+        return mlaMasteData_1.MLA_MASTER_DATA[constituencyId.toLowerCase()];
     }
     async updateCitizen(id, dto) {
         const updateData = { ...dto };

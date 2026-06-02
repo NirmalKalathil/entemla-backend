@@ -17,6 +17,7 @@ const complaint_module_1 = require("./complaints/complaint.module");
 const users_module_1 = require("./users/users.module");
 const chat_module_1 = require("./chat/chat.module");
 const admin_module_1 = require("./admin/admin.module");
+const banner_module_1 = require("./admin/banner/banner.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             complaint_module_1.ComplaintsModule,
             users_module_1.UsersModule,
             chat_module_1.ChatModule,
+            banner_module_1.BannerModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

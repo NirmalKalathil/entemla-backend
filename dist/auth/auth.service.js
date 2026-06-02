@@ -164,6 +164,28 @@ let AuthService = class AuthService {
             token,
         };
     }
+    async getMyMla(constituencyId) {
+        const mla = await this.userModel.findOne({
+            role: 'mla',
+            constituencyId,
+            isActive: true,
+        });
+        if (!mla) {
+            throw new common_1.NotFoundException('MLA not found');
+        }
+        return {
+            _id: mla._id,
+            name: mla.name,
+            email: mla.email,
+            phone: mla.phone,
+            district: mla.district,
+            place: mla.place,
+            constituencyId: mla.constituencyId,
+            mlaId: mla.mlaId,
+            photo: mla.photo,
+            party: mla.party,
+        };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

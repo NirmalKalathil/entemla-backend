@@ -1,7 +1,10 @@
 import {
     Body,
     Controller,
+    Get,
     Post,
+    Req,
+    UseGuards,
     ValidationPipe
 } from "@nestjs/common";
 
@@ -10,6 +13,9 @@ import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { EmployeeLoginDto } from "./dto/employee_login.dto";
 import { MlaLoginDto } from "./dto/mla_login.dto";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { EmployeeJwtStrategy } from "./strategies/employee-jwt.strategy";
+import { EmployeeJwtGuard } from "./guards/employee-jwt.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -48,5 +54,13 @@ export class AuthController {
         dto: MlaLoginDto
     ) {
         return this.authService.mlaLogin(dto);
+    }
+
+    @Get('my-mla')
+    @UseGuards(EmployeeJwtGuard)
+    getMyMla(@Req() req) {
+        return this.authService.getMyMla(
+            req.user.constituencyId,
+        );
     }
 }

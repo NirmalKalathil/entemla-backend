@@ -40,6 +40,7 @@ export declare class AdminController {
     } & {
         id: string;
     }) | null>;
+    getMlaInfo(constituencyId: string): Promise<any>;
     deleteMla(id: string): Promise<(import("mongoose").Document<unknown, {}, import("../auth/schemas/user.schema").User, {}, import("mongoose").DefaultSchemaOptions> & import("../auth/schemas/user.schema").User & Required<{
         _id: import("mongoose").Types.ObjectId;
     }> & {
