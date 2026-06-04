@@ -143,4 +143,10 @@ export class ComplaintsController {
   remove(@Param('id') id: string) {
     return this.complaintsService.remove(id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('analytics/admin')
+  getAdminAnalytics() {
+    return this.complaintsService.getAdminAnalytics();
+  }
 }

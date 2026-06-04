@@ -99,4 +99,12 @@ export declare class ComplaintsService {
     } & {
         id: string;
     })[]>;
+    getAdminAnalytics(): Promise<{
+        total: number;
+        statusBreakdown: any[];
+        districtWise: any[];
+        constituencyWise: any[];
+        monthlyTrend: any[];
+        avgResolutionTime: any;
+    }>;
 }

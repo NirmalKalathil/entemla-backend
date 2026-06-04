@@ -120,4 +120,6 @@ export class AdminController {
   ) {
     return this.adminService.deleteCitizen(id);
   }
+
+  
 }

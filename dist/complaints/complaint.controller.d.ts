@@ -90,4 +90,12 @@ export declare class ComplaintsController {
     } & {
         id: string;
     }) | null>;
+    getAdminAnalytics(): Promise<{
+        total: number;
+        statusBreakdown: any[];
+        districtWise: any[];
+        constituencyWise: any[];
+        monthlyTrend: any[];
+        avgResolutionTime: any;
+    }>;
 }

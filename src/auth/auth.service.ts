@@ -113,6 +113,7 @@ export class AuthService {
 
         const token = this.jwtService.sign({
             id: user._id,
+            name: user.name,
             role: user.role,
             employeeId: user.employeeId,
             constituencyId: user.constituencyId || null,

@@ -216,6 +216,80 @@ let ComplaintsService = class ComplaintsService {
             }
         }).populate("citizenId", "name");
     }
+    async getAdminAnalytics() {
+        const total = await this.complaintModel.countDocuments();
+        const statusBreakdown = await this.complaintModel.aggregate([
+            {
+                $group: {
+                    _id: "$status",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+        const districtWise = await this.complaintModel.aggregate([
+            {
+                $group: {
+                    _id: "$district",
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+        const constituencyWise = await this.complaintModel.aggregate([
+            {
+                $group: {
+                    _id: "$constituencyId",
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+        const monthlyTrend = await this.complaintModel.aggregate([
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } }
+        ]);
+        const avgResolutionTime = await this.complaintModel.aggregate([
+            {
+                $match: {
+                    status: "Resolved",
+                    createdAt: { $exists: true },
+                    updatedAt: { $exists: true }
+                }
+            },
+            {
+                $project: {
+                    diffDays: {
+                        $divide: [
+                            { $subtract: ["$updatedAt", "$createdAt"] },
+                            1000 * 60 * 60 * 24
+                        ]
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    avgDays: { $avg: "$diffDays" }
+                }
+            }
+        ]);
+        return {
+            total,
+            statusBreakdown,
+            districtWise,
+            constituencyWise,
+            monthlyTrend,
+            avgResolutionTime: avgResolutionTime[0]?.avgDays || 0
+        };
+    }
 };
 exports.ComplaintsService = ComplaintsService;
 exports.ComplaintsService = ComplaintsService = __decorate([
