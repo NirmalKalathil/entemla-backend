@@ -32,9 +32,6 @@ export class Complaint {
   citizenId!: Types.ObjectId;
 
   @Prop()
-  evidence?: string;
-
-  @Prop()
   location?: string;
 
   @Prop({ default: 0 })
@@ -65,8 +62,38 @@ export class Complaint {
   @Prop({ default: "" })
   comment!: string;
 
+  // Keep your existing string reason
+  @Prop()
+  rejectionReason: string;
+
+  @Prop()
+  rejectedByName: string;
+
+  @Prop()
+  rejectedByRole: string;
+
+  // ADD THIS: Track who authorized the rejection
+  @Prop({
+    type: {
+      adminId: { type: Types.ObjectId, ref: 'User' },
+      username: { type: String },
+      role: { type: String, enum: ['employee', 'mla'] }
+    },
+    default: null,
+  })
+  rejectedBy!: {
+    adminId: Types.ObjectId;
+    username: string;
+    role: string;
+  } | null;
+
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-constituencyId: Types.ObjectId;
+  constituencyId: Types.ObjectId;
+
+  @Prop({
+    default: null,
+  })
+  evidence: string;
 
   @Prop({
     type: [
@@ -105,7 +132,7 @@ constituencyId: Types.ObjectId;
 
     default: [],
   })
-  replies !: {
+  replies!: {
     userId?: Types.ObjectId;
     username?: string;
     text: string;
@@ -115,6 +142,8 @@ constituencyId: Types.ObjectId;
     createdAt?: Date;
 
   }[];
+
+
 }
 
 export const ComplaintSchema = SchemaFactory.createForClass(Complaint);

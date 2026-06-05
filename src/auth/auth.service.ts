@@ -125,6 +125,7 @@ export class AuthService {
 
             user: {
                 _id: user._id,
+                name: user.name,
                 employeeId: user.employeeId,
                 constituencyId: user.constituencyId,
                 role: user.role,

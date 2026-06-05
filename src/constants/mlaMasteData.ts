@@ -269,10 +269,10 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/k-praveen-kumar_member_16_17.jpg"
   },
-  "nemmara": {
+  "nenmara": {
     "name": "K PREMAN",
     "party": "Communist Party Of India(Marxist)",
-    "phone": "",
+    "phone": "9447366748",
     "photo": "https://www.niyamasabha.nic.in/images/member/k-preman_member_16_180.jpg"
   },
   "ottappalam": {

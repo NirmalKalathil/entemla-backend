@@ -8,7 +8,10 @@ import {
   Delete,
   UseGuards,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ComplaintsService } from './complaints.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -25,8 +28,12 @@ export class ComplaintsController {
   // --- POST ROUTES ---
 
   @Post()
-  async create(@Body() dto: CreateComplaintDto): Promise<Complaint> {
-    return this.complaintsService.create(dto);
+  @UseInterceptors(FileInterceptor('evidence'))
+  async create(
+    @Body() dto: CreateComplaintDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ): Promise<Complaint> {
+    return this.complaintsService.create(dto, file);
   }
 
   // --- GET ROUTES (STATIC FIRST) ---
@@ -113,6 +120,8 @@ export class ComplaintsController {
       id,
       body.status,
       body.comment,
+      body.rejectionReason,
+      body.rejectedBy,
     );
   }
 

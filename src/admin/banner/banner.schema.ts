@@ -15,6 +15,9 @@ export class Banner extends Document {
 
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop()
+  createdBy: string;
 }
 
 export const BannerSchema =

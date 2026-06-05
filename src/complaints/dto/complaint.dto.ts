@@ -59,4 +59,14 @@ export class CreateComplaintDto {
   @IsNotEmpty()
   citizenId! : string;
 
+  @IsOptional()
+rejectionReason?: string;
+
+rejectedBy?: {
+  adminId: string;
+  adminName: string;
+  adminRole: string;
+  mlaId?: string;
+};
+
 }

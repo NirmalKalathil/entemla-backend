@@ -5,6 +5,7 @@ import { Complaint } from './schemas/complaint.schema';
 import { CreateComplaintDto } from './dto/complaint.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { User } from '../auth/schemas/user.schema';
+import { S3Service } from '../../s3/s3.service';
 
 @Injectable()
 export class ComplaintsService {
@@ -16,23 +17,43 @@ export class ComplaintsService {
     private complaintModel: Model<Complaint>,
     @InjectModel(User.name)
     private userModel: Model<User>,
+    private readonly s3Service: S3Service,
   ) { }
 
-  async create(createComplaintDto: CreateComplaintDto) {
-    const citizen = await this.userModel.findById(createComplaintDto.citizenId);
+  async create(
+    createComplaintDto: CreateComplaintDto,
+    file?: Express.Multer.File,
+  ) {
+    const citizen = await this.userModel.findById(
+      createComplaintDto.citizenId,
+    );
 
     if (!citizen) {
-      throw new BadRequestException("Invalid citizen ID");
+      throw new BadRequestException(
+        'Invalid citizen ID',
+      );
     }
 
     if (!citizen.constituencyId) {
-      throw new BadRequestException("Citizen missing constituencyId");
+      throw new BadRequestException(
+        'Citizen missing constituencyId',
+      );
+    }
+
+    let evidenceUrl: string | null = null;
+
+    if (file) {
+      evidenceUrl =
+        await this.s3Service.uploadFile(file);
     }
 
     const newComplaint = new this.complaintModel({
       ...createComplaintDto,
       citizenId: citizen._id,
-      constituencyId: citizen.constituencyId.toLowerCase().trim(), // ✅ trusted source
+      constituencyId: citizen.constituencyId
+        .toLowerCase()
+        .trim(),
+      evidence: evidenceUrl,
     });
 
     return await newComplaint.save();
@@ -218,12 +239,39 @@ export class ComplaintsService {
     return { totalComplaints, resolvedComplaints, inProgressComplaints, avgResponse };
   }
 
-  async updateStatus(id: string, status: string, comment?: string): Promise<Complaint | null> {
-    return this.complaintModel.findByIdAndUpdate(
-      id,
-      { status, comment },
-      { returnDocument: "after" },
-    );
+  async updateStatus(
+    id: string,
+    status: string,
+    comment?: string,
+    rejectionReason?: string,
+    rejectedBy?: any,
+  ): Promise<Complaint | null> {
+
+    const complaint =
+      await this.complaintModel.findById(id);
+
+    if (!complaint) {
+      return null;
+    }
+
+    complaint.status = status;
+
+    if (comment !== undefined) {
+      complaint.comment = comment;
+    }
+
+    if (status === "Rejected") {
+      complaint.rejectionReason =
+        rejectionReason || "";
+
+      complaint.rejectedByName =
+        rejectedBy?.adminName || "";
+
+      complaint.rejectedByRole =
+        rejectedBy?.adminRole || "";
+    }
+
+    return complaint.save();
   }
 
   async remove(id: string) {
