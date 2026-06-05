@@ -17,7 +17,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    manjeshwar: {
+    manjeshwaram: {
         name: string;
         party: string;
         phone: string;
@@ -59,7 +59,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    chathannoor: {
+    chathannur: {
         name: string;
         party: string;
         phone: string;
@@ -143,7 +143,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    kozhikodesouth: {
+    "kozhikode south": {
         name: string;
         party: string;
         phone: string;
@@ -173,13 +173,13 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    ambalappuzha: {
+    ambalapuzha: {
         name: string;
         party: string;
         phone: string;
         photo: string;
     };
-    sulthanbathery_: {
+    "sulthan bathery": {
         name: string;
         party: string;
         phone: string;
@@ -209,7 +209,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    kozhikodenorth: {
+    "kozhikode north": {
         name: string;
         party: string;
         phone: string;
@@ -221,7 +221,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    vatakara: {
+    vadakara: {
         name: string;
         party: string;
         phone: string;
@@ -275,7 +275,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    ottappalam: {
+    ottapalam: {
         name: string;
         party: string;
         phone: string;
@@ -431,7 +431,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    attingal_: {
+    attingal: {
         name: string;
         party: string;
         phone: string;
@@ -443,7 +443,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    kuttiady: {
+    kuttiadi: {
         name: string;
         party: string;
         phone: string;
@@ -467,7 +467,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    ernad: {
+    eranad: {
         name: string;
         party: string;
         phone: string;
@@ -503,7 +503,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    thirurangadi: {
+    tirurangadi: {
         name: string;
         party: string;
         phone: string;
@@ -557,7 +557,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    chirayinkeezhu_: {
+    chirayinkeezhu: {
         name: string;
         party: string;
         phone: string;
@@ -599,7 +599,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    thrikkaripur: {
+    trikaripur: {
         name: string;
         party: string;
         phone: string;
@@ -671,7 +671,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    kongad_: {
+    kongad: {
         name: string;
         party: string;
         phone: string;
@@ -701,7 +701,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    vypeen: {
+    vypen: {
         name: string;
         party: string;
         phone: string;
@@ -719,7 +719,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    vallikunnu: {
+    vallikkunnu: {
         name: string;
         party: string;
         phone: string;
@@ -743,7 +743,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    mananthavady_: {
+    mananthavady: {
         name: string;
         party: string;
         phone: string;
@@ -803,13 +803,13 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    kazhakoottam: {
+    kazhakkoottam: {
         name: string;
         party: string;
         phone: string;
         photo: string;
     };
-    kunnathunadu: {
+    kunnathunad: {
         name: string;
         party: string;
         phone: string;
@@ -827,7 +827,7 @@ export declare const MLA_MASTER_DATA: {
         phone: string;
         photo: string;
     };
-    balusseri_: {
+    balusseri: {
         name: string;
         party: string;
         phone: string;

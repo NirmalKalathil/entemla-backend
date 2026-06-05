@@ -17,7 +17,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/a-d-thomas_member_16_189.jpg"
   },
-  "manjeshwar": {
+  "manjeshwaram": {
     "name": "A K M Ashraf",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -59,7 +59,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/aryadan-shoukath_member_15_86.jpg"
   },
-  "chathannoor": {
+  "chathannur": {
     "name": "B B Gopakumar",
     "party": "Bharatiya Janata Party",
     "phone": "",
@@ -143,7 +143,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/f-raja_member_16_130.jpg"
   },
-  "kozhikodesouth": {
+  "kozhikode south": {
     "name": "Fyzal Babu",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -173,13 +173,13 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/adv.-g-steephen_member_15_16_.jpg"
   },
-  "ambalappuzha": {
+  "ambalapuzha": {
     "name": "G Sudhakaran",
     "party": "Independent",
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/g-sudhakaran_member_16_188.jpg"
   },
-  "sulthanbathery_": {
+  "sulthan bathery": {
     "name": "I C Balakrishnan",
     "party": "Indian National Congress",
     "phone": "",
@@ -209,7 +209,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/k-binimon_member_16_1.jpg"
   },
-  "kozhikodenorth": {
+  "kozhikode north": {
     "name": "K Jayanth",
     "party": "Indian National Congress",
     "phone": "",
@@ -221,7 +221,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/k.k_.-ramachandran-_member_15_10_.jpg"
   },
-  "vatakara": {
+  "vadakara": {
     "name": "K K Rema",
     "party": "Revolutionary Marxist Party Of India",
     "phone": "",
@@ -275,7 +275,7 @@ export const MLA_MASTER_DATA = {
     "phone": "9447366748",
     "photo": "https://www.niyamasabha.nic.in/images/member/k-preman_member_16_180.jpg"
   },
-  "ottappalam": {
+  "ottapalam": {
     "name": "K Premkumar",
     "party": "Communist Party Of India(Marxist)",
     "phone": "",
@@ -431,7 +431,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/o-j-janeesh_member_16_124.jpg"
   },
-  "attingal_": {
+  "attingal": {
     "name": "O S Ambika",
     "party": "Communist Party Of India(Marxist)",
     "phone": "",
@@ -443,7 +443,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/adv.-p_.a_.-mohamed-riyas_member_15_17_.jpg"
   },
-  "kuttiady": {
+  "kuttiadi": {
     "name": "Parakkal Abdulla",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -467,7 +467,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/pinarayi-vijayan_member_15_7.jpg"
   },
-  "ernad": {
+  "eranad": {
     "name": "P K Basheer",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -503,7 +503,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/p.-mammikkutty_member_15_141_.jpg"
   },
-  "thirurangadi": {
+  "tirurangadi": {
     "name": "P M A Sameer",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -557,7 +557,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/ramesh-pisharody_member_16_149.jpg"
   },
-  "chirayinkeezhu_": {
+  "chirayinkeezhu": {
     "name": "Ramya Haridas",
     "party": "Indian National Congress",
     "phone": "",
@@ -599,7 +599,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/shri.-saji-cherian_member_14_172_.jpg"
   },
-  "thrikkaripur": {
+  "trikaripur": {
     "name": "Sandeep Varier",
     "party": "Indian National Congress",
     "phone": "",
@@ -671,7 +671,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/shri.-thomas-unniyadan-_member_11_78_.jpg"
   },
-  "kongad_": {
+  "kongad": {
     "name": "Thulasi Teacher",
     "party": "Indian National Congress",
     "phone": "",
@@ -701,7 +701,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/t-o-mohanan_member_16_42.jpg"
   },
-  "vypeen": {
+  "vypen": {
     "name": "Tony Chammany",
     "party": "Indian National Congress",
     "phone": "",
@@ -719,7 +719,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/adv.-t_.-siddiqu_member_15_130_.jpg"
   },
-  "vallikunnu": {
+  "vallikkunnu": {
     "name": "T V Ibrahim",
     "party": "Indian Union Muslim League",
     "phone": "",
@@ -743,7 +743,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/u-r-pradeep_member_15_139.jpg"
   },
-  "mananthavady_": {
+  "mananthavady": {
     "name": "Usha Vijayan",
     "party": "Indian National Congress",
     "phone": "",
@@ -803,13 +803,13 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/v-kunhikrishnan_member_16_175.jpg"
   },
-  "kazhakoottam": {
+  "kazhakkoottam": {
     "name": "V Muraleedharan",
     "party": "Bharatiya Janata Party",
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/v-muraleedharan_member_16_43.jpg"
   },
-  "kunnathunadu": {
+  "kunnathunad": {
     "name": "V P Sajeendran",
     "party": "Indian National Congress",
     "phone": "",
@@ -827,7 +827,7 @@ export const MLA_MASTER_DATA = {
     "phone": "",
     "photo": "https://www.niyamasabha.nic.in/images/member/vt_balram.jpg"
   },
-  "balusseri_": {
+  "balusseri": {
     "name": "V T Sooraj",
     "party": "Indian National Congress",
     "phone": "",
