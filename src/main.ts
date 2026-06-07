@@ -8,7 +8,10 @@ async function bootstrap() {
   );
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:5173', // or whatever port your React app uses
+    origin: [
+             'http://localhost:5173',
+             "https://d35it9uymy4idy.cloudfront.net"
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
